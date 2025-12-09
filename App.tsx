@@ -19,6 +19,7 @@ import { ImageWithFallback } from './components/ImageWithFallback';
 import { SplashScreen } from './components/SplashScreen';
 import { LeadershipSection } from './components/LeadershipSection';
 import { ProjectLightbox } from './components/ProjectLightbox'; // Import ProjectLightbox
+import { ProjectsPage } from './components/ProjectsPage'; // Corrected import
 import { stats, services } from './data';
 import { projectData } from './projects.config'; // New import for structured project data
 // import { projects } from './src/data/projects'; // Old import
@@ -313,16 +314,11 @@ const HomeContent: React.FC = () => {
   );
 };
 
-import { ProjectsPage } from './components/ProjectsPage'; // Corrected import
-
 // Main App component for routing and splash screen
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  console.log("Current Loading State:", isLoading);
 
   useEffect(() => {
-    console.log('App: useEffect ran. Current isLoading:', isLoading); // Added log
-
     // Remove the initial HTML loader once the React app is mounted
     const initialLoader = document.getElementById('initial-loader');
     if (initialLoader) {
@@ -336,12 +332,10 @@ const App: React.FC = () => {
 
     // Simulate loading time and then hide splash screen
     const timer = setTimeout(() => {
-      console.log('App: setIsLoading(false) called.'); // Added log
       setIsLoading(false);
     }, 1500);
 
     return () => {
-      console.log('App: useEffect cleanup.'); // Added log
       clearTimeout(timer);
     };
   }, []);
