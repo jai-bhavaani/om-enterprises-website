@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OM Enterprises - Edilite Construction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: '#0f172a',
+              surface: '#1e293b',
+              safety: '#FF6B00',
+              concrete: '#94a3b8',
+              'concrete-light': '#cbd5e1',
+              'steel-dark': '#334155',
+              blueprint: '#172554', // blue-950
+              'blueprint-grid': '#1e3a8a', // blue-900
+            },
+            fontFamily: {
+              header: ['Oswald', 'sans-serif'],
+              body: ['Space Grotesk', 'sans-serif'],
+            },
+            letterSpacing: {
+              'industrial': '0.15em',
+              'massive': '0.25em',
+            },
+            backgroundImage: {
+              'grid-pattern': "linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px)",
+              'blueprint-pattern': "linear-gradient(#1e3a8a 1px, transparent 1px), linear-gradient(90deg, #1e3a8a 1px, transparent 1px)",
+              'steel-gradient': "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 50%, #475569 51%, #cbd5e1 100%)",
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #0f172a;
+        color: #f8fafc;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        margin: 0;
+        overflow-x: hidden;
+      }
+      
+      /* Global Noise Texture */
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.07;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155; 
+        border: 1px solid #1e293b;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #FF6B00; 
+      }
+      
+      /* Steel Text Effect */
+      .text-steel-cut {
+        color: #e2e8f0;
+        /* Fallback for browsers that don't support text clip well with complex backgrounds */
+        background: linear-gradient(180deg, #f8fafc 10%, #94a3b8 50%, #475569 51%, #cbd5e1 90%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
+        filter: drop-shadow(0 0 1px rgba(255,255,255,0.2));
+      }
+
+      /* Utility for text reveal masking */
+      .reveal-mask {
+        overflow: hidden;
+        display: block;
+      }
+      .reveal-text {
+        display: block;
+        transform: translateY(100%);
+        will-change: transform;
+      }
+
+      /* Slanted Button Clip */
+      .clip-path-slant {
+        clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+      }
+
+      /* Glassmorphism Card Effect */
+      .glass-card {
+        background: rgba(30, 41, 59, 0.5); /* surface color at 50% opacity */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(148, 163, 184, 0.2); /* concrete color at 20% opacity */
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.1/client"
+  }
+}
+</script>
+
+</head>
+  <body>
+    <div id="initial-loader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 9999;">
+      <img src="/src/assets/images/logo.png" alt="Loading Logo" style="height: 100px; width: auto; border-radius: 8px;" />
+    </div>
+    <div id="root"></div>
+    <div class="noise-overlay"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
