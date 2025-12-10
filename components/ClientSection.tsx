@@ -8,7 +8,7 @@ import piramalImg from '@/assets/images/piramal.png';
 import raymondImg from '@/assets/images/raymond.png';
 import billiImg from '@/assets/images/billi.png';
 import breachImg from '@/assets/images/breach.png';
-import landtImg from '@/assets/images/Landt.png';
+import landtImg from '@/assets/images/landt.png';
 import hccImg from '@/assets/images/hcc.png';
 import primeImg from '@/assets/images/prime.png';
 import rnaImg from '@/assets/images/rna.png';
