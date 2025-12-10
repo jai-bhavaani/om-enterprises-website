@@ -7,7 +7,7 @@ import { ImageCarousel, CarouselItem } from './ImageCarousel';
 import welspunImg from '@/assets/images/welspun.png';
 import piramalImg from '@/assets/images/piramal.png';
 import raymondImg from '@/assets/images/raymond.png';
-import landtImg from '@/assets/images/LandT.png';
+import landtImg from '@/assets/images/Landt.png';
 
 declare global {
   interface Window {
