@@ -4,7 +4,7 @@ import { Navbar } from './Navbar';
 import { ProjectLightbox } from './ProjectLightbox'; // Import ProjectLightbox (assuming path is correct)
 import { ImageWithFallback } from './ImageWithFallback'; // Import ImageWithFallback
 
-import { projects } from '../src/data/projects'; // Corrected import path
+import { projectData as projects } from '../projects.config'; // Use dynamic project data
 
 export const ProjectsPage: React.FC = () => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);

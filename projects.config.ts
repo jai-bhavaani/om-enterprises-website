@@ -1,6 +1,6 @@
 
 // Get all images from the projects folder
-const projectImages = import.meta.glob('/src/assets/projects/**/*.{png,jpg,jpeg,JPG,JPEG,webp}', { eager: true, import: 'default' });
+const projectImages = import.meta.glob('./src/assets/projects/**/*.{png,jpg,jpeg,JPG,JPEG,webp}', { eager: true, import: 'default' });
 
 const projectsMap: Record<string, string[]> = {};
 
