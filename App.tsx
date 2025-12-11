@@ -105,7 +105,7 @@ const HomeContent: React.FC = () => {
                           <CountUp end={stat.value} suffix={stat.suffix} />
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="h-[1px] w-4 bg-safety group-hover:w-8 transition-all duration-300"></div>
+                          <div className="h-px w-4 bg-safety group-hover:w-8 transition-all duration-300"></div>
                           <div className="font-body text-xs text-concrete-light uppercase tracking-widest">{stat.label}</div>
                         </div>
                     </div>
@@ -363,5 +363,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-

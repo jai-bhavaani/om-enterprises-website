@@ -49,7 +49,7 @@ export const ClientSection: React.FC = () => {
           <div className="relative w-full">
             <div className="flex flex-wrap justify-center">
             {extendedPartners.map((partner, index) => (
-              <div key={index} className="flex-shrink-0 mx-6">
+              <div key={index} className="flex-none mx-6">
                 <img
                   src={partner.logo}
                   alt={partner.alt}
