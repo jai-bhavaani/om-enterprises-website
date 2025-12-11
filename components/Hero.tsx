@@ -63,7 +63,7 @@ export const Hero: React.FC<HeroProps> = ({ heroCarouselItems }) => {
     <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden bg-background p-4 md:p-6">
       {/* Background Grid */}
       <div className="absolute inset-0 z-0 bg-grid-pattern opacity-10 pointer-events-none" style={{ backgroundSize: '40px 40px' }}></div>
-      <div className="absolute inset-0 z-0 bg-gradient from-background via-transparent to-background pointer-events-none"></div>
+      <div className="absolute inset-0 z-0 bg-gradient-to-t from-background via-transparent to-background pointer-events-none"></div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] lg:gap-10 gap-6 items-center">
         {/* Left Column: Text Content & Social Proof */}
@@ -75,8 +75,7 @@ export const Hero: React.FC<HeroProps> = ({ heroCarouselItems }) => {
             The Foundation of Excellence. We deliver complex civil, excavation, and foundation projects for India's most demanding developers.
           </p>
           <div className="flex flex-wrap gap-4 mb-10">
-            <Button label="View Projects" variant={ButtonVariant.PRIMARY} to="/projects" /> {/* Added to="/projects" */}
-            <Button label="Request Quote" variant={ButtonVariant.OUTLINE} />
+            <Button label="View Projects" variant={ButtonVariant.PRIMARY} to="/projects" />
           </div>
           
           <div className="w-full border-t border-slate-700/50 pt-6">

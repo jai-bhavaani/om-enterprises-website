@@ -1,15 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion'; // Import motion
+import { HashLink } from 'react-router-hash-link';
 import { Logo } from './Logo'; // Import Logo component
 
 const navItems = [
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Timeline', href: '#timeline' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Team', href: '#team' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Projects', path: '/projects' },
+  { label: 'Services', path: '/#services' },
+  { label: 'About', path: '/#about' },
+  { label: 'Timeline', path: '/#timeline' },
+  { label: 'Team', path: '/#team' },
+  { label: 'Contact', path: '/#contact' },
 ];
 
 export const Navbar: React.FC = () => {
@@ -37,25 +38,26 @@ export const Navbar: React.FC = () => {
           <div className="absolute -bottom-[1px] -right-[1px] w-[1px] h-3 bg-safety"></div>
           
           {/* Logo Section */}
-          <div className="flex items-center gap-4">
+          <HashLink to="/" className="flex items-center gap-4">
             <Logo size="medium" layoutId="brand-logo" /> 
             <div className="flex flex-col leading-none">
               <span className="font-header text-xl tracking-industrial font-bold text-white uppercase">OM Enterprises</span>
               <span className="font-body text-[10px] text-concrete uppercase tracking-widest">Edilite Const. Pvt. Ltd</span>
             </div>
-          </div>
+          </HashLink>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
-              <a
+              <HashLink
                 key={item.label}
-                href={item.href}
+                to={item.path}
+                smooth
                 className="relative font-body text-xs font-bold uppercase tracking-widest text-concrete hover:text-safety transition-colors duration-300 group"
               >
                 <span className="relative z-10">{item.label}</span>
                 <span className="absolute -bottom-2 left-0 w-full h-[1px] bg-safety transform scale-x-0 origin-right transition-transform duration-300 group-hover:scale-x-100 group-hover:origin-left"></span>
-              </a>
+              </HashLink>
             ))}
             
             <a 
@@ -83,14 +85,15 @@ export const Navbar: React.FC = () => {
           <div className="md:hidden mt-2 p-6 backdrop-blur-xl bg-background/95 border border-safety/30 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-safety"></div>
              {navItems.map((item) => (
-              <a
+              <HashLink
                 key={item.label}
-                href={item.href}
+                to={item.path}
+                smooth
                 className="block py-4 font-header text-lg uppercase tracking-widest text-concrete hover:text-white hover:pl-2 transition-all duration-300 border-b border-slate-800/50 last:border-0"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
-              </a>
+              </HashLink>
             ))}
             <div className="mt-6 pt-2 border-t border-slate-700">
                <a href="/src/assets/brochure/brochure.pdf" download className="block text-center w-full bg-safety text-black font-header py-3 tracking-widest">Download Brochure</a>

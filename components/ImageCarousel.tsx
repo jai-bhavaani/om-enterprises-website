@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export interface CarouselItem {
   src: string;
   title?: string;
+  scope?: string;
 }
 
 interface ImageCarouselProps {
@@ -29,7 +30,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ items }) => {
 
     return () => clearInterval(timer);
   }, [nextImage]);
-
+   
   return (
     <div className="relative w-full h-full group">
       {items.map((item, index) => (
@@ -59,12 +60,18 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ items }) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
+                className="flex flex-col items-center gap-2"
             >
                 <h3
   className="text-white font-header bg-black/50 rounded-lg px-3 py-1 text-2xl md:text-3xl uppercase tracking-wider"
 >
   {items[currentIndex]?.title}
 </h3>
+{items[currentIndex]?.scope && (
+  <p className="text-concrete-light font-body bg-black/50 rounded-lg px-3 py-1 text-sm md:text-base tracking-wide max-w-md">
+    {items[currentIndex]?.scope}
+  </p>
+)}
 
             </motion.div>
         </AnimatePresence>

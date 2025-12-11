@@ -23,8 +23,8 @@ Object.keys(projectImages).forEach((path) => {
 });
 const titleMapping: Record<string, string> = {
   "Ariisto Mulund": "Ariisto, Mulund",
-  "Aristo Glory": "Aristo Glory ",
-  "Arristo Goregaon": "Arissto Goregaon",
+  "Aristo Glory": "Ariisto Glory ",
+  "Arristo Goregaon": "Ariisto Goregaon",
   "Ashirwad Bunglow": "Ashirwad Bungalow,Bandra West",
   "Aurum Venturs": "Aurum Ventures",
   "B E Billimoria Andheri": "B. E. Billimoria Andheri",
@@ -38,9 +38,9 @@ const titleMapping: Record<string, string> = {
   "Kasturi Chirabazar": "Kasturi Chirabazar",
   "L & T Forest Hill": "L&T Forest Hill",
   "Lulu Walkeshwar": "Lulu Walkeshwar",
-  "Mahindra Kandivali": "Mahindra Road, Kandivali",
+  "Mahindra Kandivali": "Mahindra & Mahindra , Kandivali",
   "Photo": "Other Photos",
-  "Piramal": "Gulita Piramal (Nival D)",
+  "Piramal": "Piramal Gulita ",
   "Piramal Agastya": "Piramal Agastya",
   "Piramal Pathway Images": "Piramal Pathway",
   "Piramal Vaikunth": "Piramal Vaikunth",
@@ -54,6 +54,7 @@ const titleMapping: Record<string, string> = {
   "VJTF Borivali": "VJTF Borivali",
   "Welspun": "Welspun Thane"
   
+  
 };
 
 const nameMapping: Record<string, string> = {
@@ -63,7 +64,7 @@ const nameMapping: Record<string, string> = {
   "HCC Jammu": "HCC ( Hindustan Construction Company )",
   "Kasturi Chirabazar": "Kasturi Infrastructure Private Limited",
   "L & T Forest Hill": "L&T Construction",
-  "Piramal": "Gulita Piramal ( Nival Developers )",
+  "Piramal": " Piramal Gulita ",
   "Piramal Estates": "Piramal Estates Pvt. Ltd.",
   "Piramal Mahalaxmi": "Piramal Mahalaxmi ( Glider Buildcon )",
   "Prestige Estates": "Prestige Estates Pvt Ltd.",
@@ -79,31 +80,46 @@ const nameMapping: Record<string, string> = {
 
 
 const scopeMapping: Record<string, string> = {
-  "Aristo Glory": "Excavation",
-  "Arristo Goregaon": "Civil & Infra Work",
-  "Ashirwad Bunglow": "Piling, Anchoring & Excavation Work",
-  "B E Billimoria Andheri": "Excavation & Civil Work",
-  "B E Billimoria Raptacos Thane": "Excavation Work",
-  "Breach Candy Hospital": "Shore Piling & Rock Anchors",
-  "HCC Jammu": "Foundation & Slope Stablization Work",
-  "Kasturi Chirabazar": "Piling, Anchoring & Excavation Work",
-  "L & T Forest Hill": "Excavation",
-  "Lulu Walkeshwar": "Anchoring & Excavation",
-  "Mahindra Kandivali": "Road Construction",
-  "Piramal": "Civil Work",
-  "Piramal Estates": "Civil & Infra Work",
-  "Piramal Mahalaxmi": "Civil & Infra Work",
-  "Piraml Revanta Mulund": "Civil & Infra ",
-  "Prestige Estates": "Piling, Anchoring & Excavation Work",
-  "Prestige mulund": "Excavation",
-  "Prime Focus": "Piling, Anchoring & Excavation Work",
-  "Raymond Bandra Site": "Excavation Work",
-  "RNA BAM Market Photos": "Excavation Work",
-  "Sayba Spaces": "Anchoring & Excavation Work",
-  "Tryksha Real Estate": "Piling, Anchoring & Excavation",
-  "Verve Greens": "Shore Piling, Rock Anchors & Excavation Work",
-  "Welspun": "Piling, Anchoring & Excavation Work",
-  "VJTF Borivali": "Compound Wall "
+  // Piling, Anchoring & Excavation (Combined - Most Common)
+  "Ashirwad Bunglow": "Piling, Anchoring & Excavation",
+  "Breach Candy Hospital": "Piling, Anchoring & Excavation",
+  "Kasturi Chirabazar": "Piling, Anchoring & Excavation",
+  "Lulu Walkeshwar": "Piling, Anchoring & Excavation",
+  "Piling": "Piling, Anchoring & Excavation",
+  "Tractor Piling": "Piling, Anchoring & Excavation",
+  "Welspun": "Piling, Anchoring & Excavation",
+  "L & T Forest Hill": "Piling, Anchoring & Excavation",
+  "Prestige mulund": "Piling, Anchoring & Excavation",
+
+  // Civil & Infrastructure
+  "Arristo Goregaon": "Civil & Infrastructure",
+  "HCC Jammu": "Civil & Infrastructure",
+  "B E Billimoria Andheri": "Civil & Infrastructure",
+  "Chistiya height Null bazar": "Civil & Infrastructure",
+  
+  "Piramal": "Civil & Infrastructure",
+  "Piramal Agastya": "Civil & Infrastructure",
+  "Piramal Vaikunth": "Civil & Infrastructure",
+  "Piraml Revanta Mulund": "Civil & Infrastructure",
+  "RNA Metroppolis": "Civil & Infrastructure",
+  "Shanti Housing": "Civil & Infrastructure",
+  "VJTF Borivali": "Civil & Infrastructure",
+  "Welspun One ( JNPA SEZ Site )": "Civil & Infrastructure",
+
+  // Excavation Only (Specialized)
+  "Aristo Glory": "Excavation Only",
+  "Aurum Venturs": "Excavation Only",
+  "B E Billimoria Raptacos Thane": "Excavation Only",
+  "Raymond Bandra Site": "Excavation Only",
+  "RNA BAM Market Photos": "Excavation Only",
+
+  // Demolition
+  "Breaking": "Demolition",
+  "Chembur Demoliotion": "Demolition",
+
+
+  // road 
+  "Mahindra Kandivali": "Road constructionn",
 };
 
 

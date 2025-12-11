@@ -14,7 +14,6 @@ import TextReveal from './components/TextReveal';
 import CountUp from './components/CountUp';
 import { WhyChooseUs } from './components/WhyChooseUs';
 import { KineticDivider } from './components/KineticDivider';
-import { Contact } from './components/Contact';
 import { ImageWithFallback } from './components/ImageWithFallback';
 import { SplashScreen } from './components/SplashScreen';
 import { LeadershipSection } from './components/LeadershipSection';
@@ -31,7 +30,6 @@ import { CarouselItem } from './components/ImageCarousel';
 
 // Component for the main home page content
 const HomeContent: React.FC = () => {
-  const [isFormVisible, setIsFormVisible] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxImages, setLightboxImages] = useState<string[]>([]);
   const [initialImageIndex, setInitialImageIndex] = useState(0);
@@ -42,7 +40,7 @@ const HomeContent: React.FC = () => {
     if (project.images && project.images.length > 0) {
       // Pick one random image from the project
       const randomImage = project.images[Math.floor(Math.random() * project.images.length)];
-      potentialHeroItems.push({ src: randomImage, title: project.title });
+      potentialHeroItems.push({ src: randomImage, title: project.title, scope: project.scope });
     }
   });
 
@@ -72,8 +70,100 @@ const HomeContent: React.FC = () => {
       <main className="relative z-10 flex flex-col">
         <Hero heroCarouselItems={selectedHeroItems} />
         
+
+        
+        {/* Projects Grid Section */}
+        <section id="projects" className="scroll-mt-28 py-20 px-4 bg-background relative overflow-hidden">
+          {/* Background Grid */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
+
+          <div className="max-w-7xl mx-auto relative z-10">
+             <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div>
+                   <span className="font-body text-safety text-xs uppercase tracking-widest mb-2 block">Our Portfolio</span>
+                   <h2 className="font-header text-5xl md:text-6xl uppercase font-bold text-white">Project Spotlights</h2>
+                </div>
+                {/* Remove Link to="/projects" and ensure button is standalone */}
+                <Link to="/projects">
+                  <Button label="View All Projects" variant={ButtonVariant.OUTLINE} />
+                </Link>
+             </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                             {(() => {
+                               let homepageProjects = projectData.slice(0, 4);
+                               const vjtfBorivaliIndex = homepageProjects.findIndex(p => p.title === "VJTF Borivali");
+                               
+                               if (vjtfBorivaliIndex !== -1) {
+                                 const ltForestHillProject = projectData.find(p => p.title === "L&T Forest Hill");
+                                 if (ltForestHillProject) {
+                                   homepageProjects[vjtfBorivaliIndex] = ltForestHillProject;
+                                 }
+                               }
+                               return homepageProjects.map((project, i) => ( // Display a subset for spotlights, e.g., first 4
+                                 <div
+                                   key={i}
+                                   className="group relative h-80 bg-surface border border-slate-800 overflow-hidden cursor-pointer"
+                                   onClick={() => openLightbox(project.images, 0)} // Open lightbox on card click
+                                 >
+                                    <ImageWithFallback
+                                     src={project.images[0]} // Use first image from the array
+                                     fallbackSrc="https://placehold.co/800x600/png?text=Project+Image"
+                                     alt={project.title}
+                                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-50"
+                                   />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+                                    
+                                    <div className="absolute bottom-0 left-0 w-full p-8">
+                                       <div className="flex justify-between items-end">
+                                          <div>
+                                             {/* Removed id and status as they are not in the new projectData structure */}
+                                             <h3 className="font-header text-3xl text-white uppercase">{project.title}</h3>
+                               {project.scope && <p className="font-body text-concrete-light text-base mt-1">{project.scope}</p>}
+                                             {/* Removed client as it is not in the new projectData structure */}
+                                          </div>
+                                          <div className="w-10 h-10 border border-white/20 flex items-center justify-center text-white group-hover:bg-safety group-hover:text-black group-hover:border-safety transition-all">
+                                             ↗
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                               ));
+                             })()}             </div>
+          </div>
+        </section>
+
+        
+
+        {/* Services Section */}
+        <section id="services" className="scroll-mt-28 py-20 px-4 bg-slate-900 relative">
+           {/* Pattern overlay */}
+           <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+
+           <div className="max-w-7xl mx-auto">
+             <div className="mb-10 relative z-10 text-center">
+               <h3 className="font-header text-4xl text-white uppercase mb-4">Our Core Services</h3>
+               <p className="font-body text-concrete text-sm">Deploying advanced engineering solutions.</p>
+             </div>
+
+             <div className="flex overflow-x-auto gap-6 relative z-10 pb-8 -mb-8">
+               {services.map((service) => (
+                 <div key={service.id} className="flex-shrink-0 w-80">
+                   <ServiceCard 
+                     id={service.id}
+                     title={service.title}
+                     desc={service.desc}
+                     type={service.type}
+                   />
+                 </div>
+               ))}
+             </div>
+           </div>
+        </section>
+
+        
         {/* About Section - Redesigned for Visual Storytelling (Fixed) */}
-        <section id="about" className="py-20 px-4 bg-surface/20 border-t border-slate-800">
+        <section id="about" className="scroll-mt-28 py-20 px-4 bg-surface/20 border-t border-slate-800">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
@@ -133,162 +223,43 @@ const HomeContent: React.FC = () => {
           </div>
         </section>
 
-        {/* Services Section */}
-        <section id="services" className="py-20 px-4 bg-slate-900 relative">
-           {/* Pattern overlay */}
-           <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
-
-           <div className="max-w-7xl mx-auto">
-             <div className="mb-10 relative z-10 text-center">
-               <h3 className="font-header text-4xl text-white uppercase mb-4">Our Core Services</h3>
-               <p className="font-body text-concrete text-sm">Deploying advanced engineering solutions.</p>
-             </div>
-
-             <div className="flex overflow-x-auto gap-6 relative z-10 pb-8 -mb-8">
-               {services.map((service) => (
-                 <div key={service.id} className="flex-shrink-0 w-80">
-                   <ServiceCard 
-                     id={service.id}
-                     title={service.title}
-                     desc={service.desc}
-                     type={service.type}
-                   />
-                 </div>
-               ))}
-             </div>
-           </div>
-        </section>
+        
 
         <WhyChooseUs />
 
         {/* Timeline Section */}
-        <Timeline />
-
-        {/* Projects Grid Section */}
-        <section id="projects" className="py-20 px-4 bg-background relative overflow-hidden">
-          {/* Background Grid */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
-
-          <div className="max-w-7xl mx-auto relative z-10">
-             <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-                <div>
-                   <span className="font-body text-safety text-xs uppercase tracking-widest mb-2 block">Our Portfolio</span>
-                   <h2 className="font-header text-5xl md:text-6xl uppercase font-bold text-white">Project Spotlights</h2>
-                </div>
-                {/* Remove Link to="/projects" and ensure button is standalone */}
-                <Link to="/projects">
-                  <Button label="View All Projects" variant={ButtonVariant.OUTLINE} />
-                </Link>
-             </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                             {(() => {
-                               let homepageProjects = projectData.slice(0, 4);
-                               const vjtfBorivaliIndex = homepageProjects.findIndex(p => p.title === "VJTF Borivali");
-                               
-                               if (vjtfBorivaliIndex !== -1) {
-                                 const ltForestHillProject = projectData.find(p => p.title === "L&T Forest Hill Project");
-                                 if (ltForestHillProject) {
-                                   homepageProjects[vjtfBorivaliIndex] = ltForestHillProject;
-                                 }
-                               }
-                               return homepageProjects.map((project, i) => ( // Display a subset for spotlights, e.g., first 4
-                                 <div
-                                   key={i}
-                                   className="group relative h-80 bg-surface border border-slate-800 overflow-hidden cursor-pointer"
-                                   onClick={() => openLightbox(project.images, 0)} // Open lightbox on card click
-                                 >
-                                    <ImageWithFallback
-                                     src={project.images[0]} // Use first image from the array
-                                     fallbackSrc="https://placehold.co/800x600/png?text=Project+Image"
-                                     alt={project.title}
-                                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-50"
-                                   />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
-                                    
-                                    <div className="absolute bottom-0 left-0 w-full p-8">
-                                       <div className="flex justify-between items-end">
-                                          <div>
-                                             {/* Removed id and status as they are not in the new projectData structure */}
-                                             <h3 className="font-header text-3xl text-white uppercase">{project.title}</h3>
-                               {project.scope && <p className="font-body text-concrete-light text-base mt-1">{project.scope}</p>}
-                                             {/* Removed client as it is not in the new projectData structure */}
-                                          </div>
-                                          <div className="w-10 h-10 border border-white/20 flex items-center justify-center text-white group-hover:bg-safety group-hover:text-black group-hover:border-safety transition-all">
-                                             ↗
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                               ));
-                             })()}             </div>
-          </div>
+        <section id="timeline" className="scroll-mt-28">
+          <Timeline />
         </section>
 
-        <KineticDivider />
+        <section id="team" className="scroll-mt-28">
+          <LeadershipSection />
+        </section>
 
-        <LeadershipSection />
-
-        <section id="clients">
+        <section id="clients" className="scroll-mt-28">
           <ClientSection />
         </section>
 
-                {isFormVisible ? (
-
-                  <Contact />
-
-                ) : (
-
-                  <section id="contact" className="py-20 px-4 text-center bg-background">
-
-                    <Button
-
-                      label="Start Your Project Inquiry"
-
-                      onClick={() => setIsFormVisible(true)}
-
-                      variant={ButtonVariant.PRIMARY}
-
-                    />
-
-                    <div className="mt-12 pt-8 border-t border-slate-800 text-center">
-
-                      <h3 className="font-header text-xl uppercase font-bold text-white mb-4">Or Contact Us Directly</h3>
-                      <p className="font-body text-concrete/80 text-sm mb-8">For immediate consultation, contact our project director directly.</p>
-
-                      <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 font-body text-sm text-concrete">
-
-                        <div>
-
-                            <span className="block text-xs text-safety uppercase tracking-widest mb-1">Email</span>
-
-                            omenterprise20@gmail.com
-
-                        </div>
-
-                        <div>
-
-                            <span className="block text-xs text-safety uppercase tracking-widest mb-1">Phone</span>
-
-                            +91-022-49697792
-
-                        </div>
-
-                        <div>
-
-                            <span className="block text-xs text-safety uppercase tracking-widest mb-1">HQ</span>
-
-                            Mumbai, Maharashtra
-
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                  </section>
-
-                )}
+        <section id="contact" className="scroll-mt-28 py-20 px-4 text-center bg-background border-t border-slate-800">
+          <div className="text-center">
+            <h3 className="font-header text-3xl uppercase font-bold text-white mb-4">Contact Us Directly</h3>
+            <p className="font-body text-concrete/80 text-lg mb-8">For immediate consultation, contact our project director directly.</p>
+            <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 font-body text-base text-concrete">
+              <div>
+                  <span className="block text-xs text-safety uppercase tracking-widest mb-1">Email</span>
+                  omenterprise20@gmail.com
+              </div>
+              <div>
+                  <span className="block text-xs text-safety uppercase tracking-widest mb-1">Phone</span>
+                  +91-022-49697792
+              </div>
+              <div>
+                  <span className="block text-xs text-safety uppercase tracking-widest mb-1">HQ</span>
+                  Mumbai, Maharashtra
+              </div>
+            </div>
+          </div>
+        </section>
 
               </main>
 
