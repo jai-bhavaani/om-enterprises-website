@@ -47,7 +47,7 @@ export const ProjectsPage: React.FC = () => {
                       {project.title}
                     </h2>
                     {project.scope && <p className="font-body text-concrete-light text-base sm:text-lg mb-2">{project.scope}</p>}
-                    {project.value && <p className="font-body text-concrete-light text-base sm:text-lg">Value: {project.value}</p>}
+                    
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                     {project.images.map((imagePath, imageIndex) => (
