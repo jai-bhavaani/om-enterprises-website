@@ -3,6 +3,7 @@ import { Button } from './Button';
 import { ButtonVariant } from '../types';
 
 import { ImageCarousel, CarouselItem } from './ImageCarousel';
+import { LocationCycler } from './LocationCycler';
 
 import welspunImg from '@/assets/images/welspun.png';
 import piramalImg from '@/assets/images/piramal.png';
@@ -60,7 +61,7 @@ export const Hero: React.FC<HeroProps> = ({ heroCarouselItems }) => {
   const itemsToDisplay = heroCarouselItems && heroCarouselItems.length > 0 ? heroCarouselItems : defaultCarouselItems;
 
   return (
-    <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden bg-background p-4 md:p-6">
+    <section id="home" ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden bg-background p-4 md:p-6">
       {/* Background Grid */}
       <div className="absolute inset-0 z-0 bg-grid-pattern opacity-10 pointer-events-none" style={{ backgroundSize: '40px 40px' }}></div>
       <div className="absolute inset-0 z-0 bg-gradient-to-t from-background via-transparent to-background pointer-events-none"></div>
@@ -75,7 +76,9 @@ export const Hero: React.FC<HeroProps> = ({ heroCarouselItems }) => {
             The Foundation of Excellence. We deliver complex civil, excavation, and foundation projects for India's most demanding developers.
           </p>
           <div className="flex flex-wrap gap-4 mb-10">
-            <Button label="View Projects" variant={ButtonVariant.PRIMARY} to="/projects" />
+            
+             <Button label="View Projects" variant={ButtonVariant.PRIMARY} to="/projects" />
+             <LocationCycler />
           </div>
           
           <div className="w-full border-t border-slate-700/50 pt-6">
@@ -93,6 +96,8 @@ export const Hero: React.FC<HeroProps> = ({ heroCarouselItems }) => {
                   <img key={client.name} src={client.logo} alt={client.name} className="h-16 opacity-60 hover:opacity-100 transition-opacity rounded-lg" />
                 ))}
              </div>
+             
+            
           </div>
         </div>
 

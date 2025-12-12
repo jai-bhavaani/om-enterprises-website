@@ -13,16 +13,26 @@ export const ProjectsPage: React.FC = () => {
 
   // State for filtering
   const [activeFilter, setActiveFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState('All'); // New state for status filter
 
   // Get unique scopes for filter buttons
   const allScopes = React.useMemo(() => ['All', ...new Set(projects.map(p => p.scope).filter(Boolean))], []);
+  const allStatuses = ['All', 'Completed', 'in progress']; // All possible statuses
 
   // Filter and sort projects
   const filteredProjects = React.useMemo(() => {
     const sorted = [...projects].sort((a, b) => (b.images?.length || 0) - (a.images?.length || 0));
-    if (activeFilter === 'All') return sorted;
-    return sorted.filter(p => p.scope === activeFilter);
-  }, [activeFilter]);
+    
+    const scopeFiltered = activeFilter === 'All' 
+      ? sorted 
+      : sorted.filter(p => p.scope === activeFilter);
+      
+    const statusFiltered = statusFilter === 'All'
+      ? scopeFiltered
+      : scopeFiltered.filter(p => p.status === statusFilter);
+      
+    return statusFiltered;
+  }, [activeFilter, statusFilter]);
 
   const openLightbox = (images: string[], index: number) => {
     setLightboxImages(images);
@@ -45,10 +55,27 @@ export const ProjectsPage: React.FC = () => {
           <section className="py-8 px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8 bg-surface/20">
             <div className="max-w-7xl mx-auto">
               <h1 className="font-header text-4xl sm:text-5xl md:text-6xl uppercase font-bold text-white mb-8 text-center">
-                Our Projects
+                Our Major Projects
               </h1>
 
-              {/* Filter Buttons */}
+              {/* Status Filter Buttons */}
+              <div className="flex justify-center flex-wrap gap-3 mb-4">
+                {allStatuses.map(status => (
+                  <button
+                    key={status}
+                    onClick={() => setStatusFilter(status)}
+                    className={`px-4 py-2 rounded-full font-body text-sm font-semibold transition-colors duration-300 ${
+                      statusFilter === status
+                        ? 'bg-safety text-background'
+                        : 'bg-slate-800 text-concrete-light hover:bg-slate-700'
+                    }`}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+
+              {/* Scope Filter Buttons */}
               <div className="flex justify-center flex-wrap gap-3 mb-12">
                 {allScopes.map(scope => (
                   <button
@@ -70,6 +97,9 @@ export const ProjectsPage: React.FC = () => {
                   <div className="text-center md:text-left mb-8">
                     <h2 className="font-header text-3xl sm:text-4xl uppercase font-bold text-white mb-2">
                       {project.title}
+                      <span className={`ml-4 text-lg font-medium ${project.status === 'Completed' ? 'text-green-500' : 'text-yellow-500'}`}>
+                        ({project.status})
+                      </span>
                     </h2>
                     {project.scope && <p className="font-body text-concrete-light text-base sm:text-lg mb-2">{project.scope}</p>}
                   </div>

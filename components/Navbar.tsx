@@ -5,6 +5,7 @@ import { HashLink } from 'react-router-hash-link';
 import { Logo } from './Logo'; // Import Logo component
 
 const navItems = [
+  { label: 'Home', path: '/#home' },
   { label: 'Projects', path: '/projects' },
   { label: 'Services', path: '/#services' },
   { label: 'About', path: '/#about' },
@@ -59,14 +60,6 @@ export const Navbar: React.FC = () => {
                 <span className="absolute -bottom-2 left-0 w-full h-[1px] bg-safety transform scale-x-0 origin-right transition-transform duration-300 group-hover:scale-x-100 group-hover:origin-left"></span>
               </HashLink>
             ))}
-            
-            <a 
-              href="/src/assets/brochure/brochure.pdf" 
-              download 
-              className="border border-safety text-safety px-4 py-2 font-header text-sm tracking-widest hover:bg-safety hover:text-black transition-all duration-300 uppercase clip-path-slant"
-            >
-              Brochure
-            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -95,9 +88,6 @@ export const Navbar: React.FC = () => {
                 {item.label}
               </HashLink>
             ))}
-            <div className="mt-6 pt-2 border-t border-slate-700">
-               <a href="/src/assets/brochure/brochure.pdf" download className="block text-center w-full bg-safety text-black font-header py-3 tracking-widest">Download Brochure</a>
-            </div>
           </div>
         )}
       </div>

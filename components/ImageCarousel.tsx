@@ -26,7 +26,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ items }) => {
   useEffect(() => {
     const timer = setInterval(() => {
       nextImage();
-    }, 2000);
+    }, 3500);
 
     return () => clearInterval(timer);
   }, [nextImage]);

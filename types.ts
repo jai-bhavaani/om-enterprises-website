@@ -21,9 +21,9 @@ export enum ButtonVariant {
 }
 
 export interface Project {
+  title: string;
   name: string;
-  client: string;
+  scope: string;
   status: string;
-  id: string;
   images: string[];
 }

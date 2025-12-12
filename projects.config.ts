@@ -40,6 +40,7 @@ const titleMapping: Record<string, string> = {
   "Lulu Walkeshwar": "Lulu Walkeshwar",
   "Mahindra Kandivali": "Mahindra & Mahindra , Kandivali",
   "Photo": "Other Photos",
+   "Piling": "piling machinery",
   "Piramal": "Piramal Gulita ",
   "Piramal Agastya": "Piramal Agastya",
   "Piramal Pathway Images": "Piramal Pathway",
@@ -85,7 +86,7 @@ const scopeMapping: Record<string, string> = {
   "Breach Candy Hospital": "Piling, Anchoring & Excavation",
   "Kasturi Chirabazar": "Piling, Anchoring & Excavation",
   "Lulu Walkeshwar": "Piling, Anchoring & Excavation",
-  "Piling": "Piling, Anchoring & Excavation",
+  
   "Tractor Piling": "Piling, Anchoring & Excavation",
   "Welspun": "Piling, Anchoring & Excavation",
   "L & T Forest Hill": "Piling, Anchoring & Excavation",
@@ -93,18 +94,19 @@ const scopeMapping: Record<string, string> = {
 
   // Civil & Infrastructure
   "Arristo Goregaon": "Civil & Infrastructure",
-  "HCC Jammu": "Civil & Infrastructure",
-  "B E Billimoria Andheri": "Civil & Infrastructure",
   "Chistiya height Null bazar": "Civil & Infrastructure",
+ 
+  "Piramal": "Excavation Only",
   
-  "Piramal": "Civil & Infrastructure",
   "Piramal Agastya": "Civil & Infrastructure",
   "Piramal Vaikunth": "Civil & Infrastructure",
   "Piraml Revanta Mulund": "Civil & Infrastructure",
   "RNA Metroppolis": "Civil & Infrastructure",
   "Shanti Housing": "Civil & Infrastructure",
   "VJTF Borivali": "Civil & Infrastructure",
-  "Welspun One ( JNPA SEZ Site )": "Civil & Infrastructure",
+
+
+  
 
   // Excavation Only (Specialized)
   "Aristo Glory": "Excavation Only",
@@ -119,7 +121,54 @@ const scopeMapping: Record<string, string> = {
 
 
   // road 
-  "Mahindra Kandivali": "Road constructionn",
+  "Mahindra Kandivali": "Road construction",
+  "B E Billimoria Andheri": "Road construction",
+
+
+  //slope stabilization 
+  "HCC Jammu": "slope stabilization",
+
+
+  //piling 
+  "Piling": "Piling only",
+  "Welspun One ( JNPA SEZ Site )": "Piling only"
+};
+
+
+const statusMapping: Record<string, string> = {
+  "Ariisto Mulund": "Completed",
+  "Aristo Glory": "Completed",
+  "Arristo Goregaon": "Completed",
+  "Ashirwad Bunglow": "Completed",
+  "Aurum Venturs": "Completed",
+  "B E Billimoria Andheri": "Completed",
+  "B E Billimoria Raptacos Thane": "Completed",
+  "Breaking": "Completed",
+  "Breach Candy Hospital": "Completed",
+  "Chembur Demoliotion": "Completed",
+  "Chistiya height Null bazar": "Completed",
+  "Fem Jaycee Home Ghatkoper": "Completed",
+  "HCC Jammu": "Completed",
+  "Kasturi Chirabazar": "in progress",
+  "L & T Forest Hill": "in progress",
+  "Lulu Walkeshwar": "Completed",
+  "Mahindra Kandivali": "Completed",
+  "Photo": "Completed",
+  "Piling": "Completed",
+  "Piramal": "Completed",
+  "Piramal Agastya": "Completed",
+  "Piramal Pathway Images": "Completed",
+  "Piramal Vaikunth": "in progress",
+  "Piraml Revanta Mulund": "Completed",
+  "Prestige mulund": "in progress",
+  "Raymond Bandra Site": "in progress",
+  "RNA BAM Market Photos": "Completed",
+  "RNA Metroppolis": "Completed",
+  "Shanti Housing": "Completed",
+  "Tractor Piling": "Completed",
+  "VJTF Borivali": "Completed",
+  "Welspun": "Completed",
+  "Welspun One ( JNPA SEZ Site )": "in progress",
 };
 
 
@@ -137,8 +186,8 @@ export const projectData = Object.keys(projectsMap).map((folderName) => {
 
     images: projectsMap[folderName],
 
-    scope: scopeMapping[folderName] || '' // Add scope to project data
-
+    scope: scopeMapping[folderName] || '', // Add scope to project data
+    status: statusMapping[folderName] || 'in progress'
   };
 
 }).sort((a, b) => b.images.length - a.images.length);

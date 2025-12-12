@@ -253,10 +253,16 @@ const HomeContent: React.FC = () => {
                   <span className="block text-xs text-safety uppercase tracking-widest mb-1">Phone</span>
                   +91-022-49697792
               </div>
-              <div>
-                  <span className="block text-xs text-safety uppercase tracking-widest mb-1">HQ</span>
-                  Mumbai, Maharashtra
-              </div>
+              <div className="leading-relaxed">
+  <span className="block text-xs text-safety uppercase tracking-widest mb-1">OFFICE</span>
+  <p>
+    412 B2B Agrawal Co-Op Premises,<br />
+    D’Monte Lane, Kanchpada,<br />
+    Malad West, Mumbai – 400064,<br />
+    Maharashtra, India.
+  </p>
+</div>
+
             </div>
           </div>
         </section>
