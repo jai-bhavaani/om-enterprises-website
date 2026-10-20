@@ -1,1 +1,260 @@
 @import "tailwindcss";
+
+/* ==============================================================================
+   OM ENTERPRISES THEME DESIGN SYSTEM (OFFICIAL PALETTES)
+   Dark Mode: Deep Navy (#0B1120), Blueprint Blue (#172554), Electric Orange (#FF6B00), Steel Blue (#64748B), Engineering White (#F8FAFC)
+   Light Mode: Concrete White (#F5F6F4), Clean White (#FFFFFF), Carbon (#24282C), Concrete Gray (#6B7280), Safety Orange (#E66A16)
+   ============================================================================== */
+
+:root {
+  /* Light Theme Tokens */
+  --color-background: #F5F6F4;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-subtle: #EBEDE9;
+  --color-blueprint: #FFFFFF;
+  --color-safety: #E66A16;
+  --color-safety-hover: #C8560A;
+  --color-safety-text: #FFFFFF;
+  --color-text-primary: #24282C;
+  --color-text-secondary: #4B5563;
+  --color-concrete: #6B7280;
+  --color-concrete-light: #4B5563;
+  --color-border: #E5E7EB;
+  --color-border-subtle: #E5E7EB;
+  --color-border-strong: #D1D5DB;
+  --color-steel: #6B7280;
+  --color-nav-bg: rgba(255, 255, 255, 0.92);
+  --color-glass-border: rgba(209, 213, 219, 0.6);
+  --color-card-border: #E5E7EB;
+  --color-overlay: rgba(36, 40, 44, 0.6);
+  --grid-line-color: rgba(36, 40, 44, 0.05);
+}
+
+.dark {
+  /* Dark Theme Tokens */
+  --color-background: #0B1120;
+  --color-surface: #172554;
+  --color-surface-elevated: #1E3A8A;
+  --color-surface-subtle: #0F172A;
+  --color-blueprint: #172554;
+  --color-safety: #FF6B00;
+  --color-safety-hover: #E05E00;
+  --color-safety-text: #000000;
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-concrete: #94A3B8;
+  --color-concrete-light: #CBD5E1;
+  --color-border: rgba(100, 116, 139, 0.25);
+  --color-border-subtle: rgba(100, 116, 139, 0.25);
+  --color-border-strong: #64748B;
+  --color-steel: #64748B;
+  --color-nav-bg: rgba(11, 17, 32, 0.88);
+  --color-glass-border: rgba(100, 116, 139, 0.25);
+  --color-card-border: rgba(100, 116, 139, 0.25);
+  --color-overlay: rgba(0, 0, 0, 0.8);
+  --grid-line-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Tailwind Theme Mapping */
+@theme {
+  --color-background: var(--color-background);
+  --color-surface: var(--color-surface);
+  --color-surface-subtle: var(--color-surface-subtle);
+  --color-safety: var(--color-safety);
+  --color-concrete: var(--color-concrete);
+  --color-concrete-light: var(--color-concrete-light);
+  --color-steel-dark: var(--color-steel);
+  --color-blueprint: var(--color-blueprint);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-border-strong: var(--color-border-strong);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.mask-gradient-x {
+  mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+}
+
+/* ==============================================================================
+   HERO CAROUSEL VISUAL INTEGRITY
+   The hero carousel is an isolated cinematic dark showcase with heavy machinery photography.
+   Typography and controls within the hero MUST ALWAYS remain crisp white across all themes.
+   ============================================================================== */
+.hero-carousel,
+.hero-carousel h1,
+.hero-carousel h2,
+.hero-carousel .hero-heading-white {
+  color: #FFFFFF !important;
+}
+
+.hero-carousel .hero-subtitle-white {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.hero-carousel .hero-meta-white {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.hero-carousel .hero-badge-accent {
+  color: var(--color-safety) !important;
+}
+
+/* ==============================================================================
+   CMS PORTAL LIGHT MODE HARMONIZATION (FLAT NON-NESTED SELECTORS)
+   Explicitly scoped to .admin-portal so public website components (like Hero)
+   are NEVER affected by admin overrides.
+   ============================================================================== */
+:root:not(.dark) .admin-portal .bg-\[\#090d16\] {
+  background-color: var(--color-background) !important;
+}
+
+:root:not(.dark) .admin-portal .bg-\[\#0f172a\],
+:root:not(.dark) .admin-portal .bg-\[\#111c30\],
+:root:not(.dark) .admin-portal .bg-slate-900\/90,
+:root:not(.dark) .admin-portal .bg-slate-900\/80,
+:root:not(.dark) .admin-portal .bg-slate-900\/70,
+:root:not(.dark) .admin-portal .bg-slate-900\/60,
+:root:not(.dark) .admin-portal .bg-slate-900\/50,
+:root:not(.dark) .admin-portal .bg-slate-900 {
+  background-color: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+}
+
+:root:not(.dark) .admin-portal .bg-\[\#1e293b\]\/80,
+:root:not(.dark) .admin-portal .bg-\[\#1e293b\]\/70,
+:root:not(.dark) .admin-portal .bg-\[\#1e293b\]\/60,
+:root:not(.dark) .admin-portal .bg-\[\#1e293b\]\/50,
+:root:not(.dark) .admin-portal .bg-\[\#1e293b\],
+:root:not(.dark) .admin-portal .bg-slate-800\/90,
+:root:not(.dark) .admin-portal .bg-slate-800\/80,
+:root:not(.dark) .admin-portal .bg-slate-800\/70,
+:root:not(.dark) .admin-portal .bg-slate-800\/60,
+:root:not(.dark) .admin-portal .bg-slate-800\/50,
+:root:not(.dark) .admin-portal .bg-slate-800 {
+  background-color: #F8F9FA !important;
+  border-color: #E5E7EB !important;
+}
+
+:root:not(.dark) .admin-portal .bg-black\/40,
+:root:not(.dark) .admin-portal .bg-black\/30 {
+  background-color: #F3F4F6 !important;
+  border-color: #E5E7EB !important;
+}
+
+:root:not(.dark) .admin-portal .border-slate-800,
+:root:not(.dark) .admin-portal .border-slate-700,
+:root:not(.dark) .admin-portal .border-slate-700\/80,
+:root:not(.dark) .admin-portal .border-slate-700\/60,
+:root:not(.dark) .admin-portal .border-slate-800\/80 {
+  border-color: #E5E7EB !important;
+}
+
+:root:not(.dark) .admin-portal .text-white,
+:root:not(.dark) .admin-portal .text-slate-100,
+:root:not(.dark) .admin-portal .text-slate-200 {
+  color: #24282C !important;
+}
+
+:root:not(.dark) .admin-portal .text-slate-400,
+:root:not(.dark) .admin-portal .text-slate-500,
+:root:not(.dark) .admin-portal .text-concrete {
+  color: #6B7280 !important;
+}
+
+:root:not(.dark) .admin-portal .text-concrete-light {
+  color: #4B5563 !important;
+}
+
+/* Status colors and danger elements */
+:root:not(.dark) .admin-portal .text-emerald-400 {
+  color: #047857 !important;
+}
+
+:root:not(.dark) .admin-portal .text-amber-300,
+:root:not(.dark) .admin-portal .text-amber-400 {
+  color: #B45309 !important;
+}
+
+:root:not(.dark) .admin-portal .text-blue-400 {
+  color: #1D4ED8 !important;
+}
+
+:root:not(.dark) .admin-portal .bg-red-950\/40,
+:root:not(.dark) .admin-portal .bg-red-950\/30,
+:root:not(.dark) .admin-portal .bg-red-950\/50,
+:root:not(.dark) .admin-portal .bg-red-950\/20 {
+  background-color: #FEE2E2 !important;
+  border-color: #FCA5A5 !important;
+  color: #DC2626 !important;
+}
+
+:root:not(.dark) .admin-portal .bg-red-950\/40:hover,
+:root:not(.dark) .admin-portal .bg-red-900\/60:hover {
+  background-color: #FECACA !important;
+  color: #B91C1C !important;
+}
+
+:root:not(.dark) .admin-portal .text-red-400 {
+  color: #DC2626 !important;
+}
+
+:root:not(.dark) .admin-portal .border-red-900\/50 {
+  border-color: #FCA5A5 !important;
+}
+
+/* Ensure simulated Hero Carousel Preview on admin stays bright */
+:root:not(.dark) .admin-portal .hero-preview-canvas .text-white,
+:root:not(.dark) .admin-portal .hero-preview-canvas h2 {
+  color: #FFFFFF !important;
+}
+
+:root:not(.dark) .admin-portal input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
+:root:not(.dark) .admin-portal textarea,
+:root:not(.dark) .admin-portal select {
+  background-color: #FFFFFF !important;
+  color: #24282C !important;
+  border-color: #D1D5DB !important;
+}
+
+:root:not(.dark) .admin-portal input::placeholder,
+:root:not(.dark) .admin-portal textarea::placeholder {
+  color: #9CA3AF !important;
+}
+
+:root:not(.dark) .admin-portal .bg-emerald-950\/20 {
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+:root:not(.dark) .admin-portal .bg-amber-950\/20 {
+  background-color: rgba(245, 158, 11, 0.08) !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+
+:root:not(.dark) .admin-portal .bg-blue-950\/20 {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  border-color: rgba(59, 130, 246, 0.25) !important;
+}
+
+:root:not(.dark) .admin-portal .shadow-2xl,
+:root:not(.dark) .admin-portal .shadow-xl {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Hide scrollbars on modern and legacy browsers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

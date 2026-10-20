@@ -59,10 +59,10 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles = "relative px-6 py-3 font-header uppercase tracking-industrial text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 group overflow-hidden select-none";
   
   const variants = {
-    [ButtonVariant.PRIMARY]: "bg-safety text-black hover:bg-white hover:text-background border border-safety hover:border-white font-bold clip-path-slant",
-    [ButtonVariant.SECONDARY]: "bg-surface text-concrete-light border border-slate-700 hover:border-safety hover:text-safety",
-    [ButtonVariant.OUTLINE]: "relative px-12 py-6 font-header uppercase tracking-industrial text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 group overflow-hidden select-none bg-transparent text-safety border border-safety hover:bg-safety hover:text-black hover:-translate-y-1 hover:shadow-md",
-    [ButtonVariant.GHOST]: "bg-transparent text-concrete hover:text-white"
+    [ButtonVariant.PRIMARY]: "bg-safety text-[var(--color-safety-text)] hover:opacity-95 border border-safety font-bold clip-path-slant shadow-md transition-all",
+    [ButtonVariant.SECONDARY]: "bg-surface text-text-primary border border-border-strong hover:border-safety hover:text-safety transition-all",
+    [ButtonVariant.OUTLINE]: "relative px-8 py-3.5 font-header uppercase tracking-industrial text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 group overflow-hidden select-none bg-transparent text-safety border border-safety hover:bg-safety hover:text-[var(--color-safety-text)] hover:-translate-y-0.5 hover:shadow-md",
+    [ButtonVariant.GHOST]: "bg-transparent text-text-secondary hover:text-text-primary transition-colors"
   };
 
   const content = (

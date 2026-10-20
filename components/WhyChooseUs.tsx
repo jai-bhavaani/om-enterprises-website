@@ -43,11 +43,11 @@ const features = [
 
 export const WhyChooseUs: React.FC = () => {
   return (
-    <section id="why-choose-us" className="py-20 px-4 bg-background">
+    <section id="why-choose-us" className="py-20 px-4 bg-background border-t border-border-subtle">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="font-header text-4xl uppercase font-bold text-white mb-4">Why Choose Us</h2>
-          <p className="font-body text-concrete max-w-2xl mx-auto">
+          <h2 className="font-header text-4xl uppercase font-bold text-text-primary mb-4">Why Choose Us</h2>
+          <p className="font-body text-text-secondary max-w-2xl mx-auto">
             We are committed to delivering excellence in every project, ensuring our clients receive the best possible service and results.
           </p>
         </div>

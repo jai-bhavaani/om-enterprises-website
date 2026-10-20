@@ -9,59 +9,101 @@ import abhinashImg from '../assets/team_images/abhinash.jpg';
 export type Leader = {
   name: string;
   role: string;
-  image: string; // Placeholder for image path
+  image: string;
   bio: string;
+  experience?: string;
   linkedin?: string;
 };
 
 export const LEADERS: Leader[] = [
   {
     name: 'Ashok Kumar Pal',
-    role: 'Proprietor',
+    role: 'Proprietor & Principal Planner',
+    experience: '20+ Years Exp',
     image: ashokImg,
-    bio: 'Ashok Kumar Pal is the visionary founder and proprietor of OM Enterprises, with over two decades of experience in civil and foundational engineering. His leadership has been instrumental in the company\'s growth and reputation for excellence.',
-    linkedin: '#'
-  },
-  {
-    name: 'Ramlokesh Pal',
-    role: 'Manager',
-    image: lokeshImg,
-    bio: 'Ramlokesh Pal, as the Manager, oversees daily operations and project execution. His meticulous attention to detail and strong organizational skills ensure projects are delivered on time and within budget.',
+    bio: 'Founder and visionary planner of OM Enterprises. With 20+ years steering high-stakes civil substructure, deep rock excavation, and shoring contracts across Mumbai and Western India.',
     linkedin: '#'
   },
   {
     name: 'Jeeut Prasad',
-    role: 'DGM',
+    role: 'Deputy General Manager (DGM)',
+    experience: '25 Years Exp',
     image: jeetuImg,
-    bio: 'Jeeut Prasad, the Deputy General Manager, brings extensive technical expertise to the team. He is responsible for engineering design, quality control, and innovative problem-solving on complex projects.',
+    bio: '25 years of specialized geotechnical and structural execution experience, leading technical compliance, heavy plant mobilization, and safety across flagship developer sites.',
+    linkedin: '#'
+  },
+  {
+    name: 'Ramlokesh Pal',
+    role: 'General Manager',
+    experience: '15 Years Exp',
+    image: lokeshImg,
+    bio: '15 years overseeing multi-site operations, commercial contracts, client relations, and logistics across Mumbai’s major real estate corridors.',
     linkedin: '#'
   },
   {
     name: 'Adalat Yadav',
-    role: 'All Project In charge',
+    role: 'All Project In-Charge',
+    experience: '15 Years Exp',
     image: adalatImg,
-    bio: 'Adalat Yadav, as the All Project In charge, is responsible for overseeing and managing all aspects of project execution, ensuring adherence to timelines, budgets, and quality standards.',
+    bio: '15 years commanding site execution teams, machine allocation, shift management, and round-the-clock deep pit excavation operations.',
     linkedin: '#'
   },
   {
     name: 'Pravin Chavan',
     role: 'Project Manager',
+    experience: '10 Years Exp',
     image: pravinImg,
-    bio: 'Pravin Chavan, an experienced Project Manager, leads project teams with a focus on efficiency and successful delivery. His expertise ensures seamless coordination and execution of complex engineering tasks.',
+    bio: 'Civil engineering specialist managing execution milestones, rock anchoring testing, and quality control for tier-1 developer projects.',
     linkedin: '#'
   },
-  { // New team member
+  {
     name: 'Surendra Yadav',
-    role: 'Supervisor', // Assuming a role for Surendra Yadav
+    role: 'Senior Geotechnical Engineer',
+    experience: '10 Years Exp',
     image: surendraImg,
-    bio: 'Surendra Yadav is a dedicated supervisor, ensuring smooth execution and adherence to safety standards on site. His practical experience is invaluable to project success.',
+    bio: '10 years experience in deep basement shoring design, bored pile socketing, and strata stability analysis in Mumbai basalt.',
     linkedin: '#'
   },
-  { // New team member
+  {
     name: 'Abhinash Verma',
-    role: 'Engineer', // Assuming a role for Abhinash Verma
+    role: 'Senior Site Engineer',
+    experience: '10 Years Exp',
     image: abhinashImg,
-    bio: 'Abhinash Verma is a talented engineer contributing to the design and technical aspects of our projects, bringing fresh perspectives and innovative solutions.',
+    bio: '10 years field engineering experience in prestressed anchor tensioning, pile load testing, and site coordinate control.',
     linkedin: '#'
   },
 ];
+
+export const KEY_STAFF = [
+  { name: 'Ashok Kumar Pal', role: 'Proprietor', exp: 20 },
+  { name: 'Jeeut Prasad', role: 'DGM', exp: 25 },
+  { name: 'Ramlokesh Pal', role: 'Manager', exp: 15 },
+  { name: 'Adalat Yadav', role: 'All Project In charge', exp: 15 },
+  { name: 'Anil Prasad', role: 'Project Manager', exp: 16 },
+  { name: 'Pravin Chavan', role: 'Project Manager', exp: 10 },
+  { name: 'Pankaj Pal', role: 'Sr. Engineer', exp: 20 },
+  { name: 'Surendra Yadav', role: 'Sr. Engineer', exp: 10 },
+  { name: 'Abhinash', role: 'Sr. Engineer', exp: 10 },
+  { name: 'Babalu', role: 'Chief Surveyor', exp: 10 },
+  { name: 'Ram Ashish Yadav', role: 'Site Supervisor', exp: 30 },
+  { name: 'Babulal Patel', role: 'Site Supervisor', exp: 18 },
+  { name: 'Md Jillur', role: 'Site Supervisor', exp: 15 },
+  { name: 'Taufik Alam', role: 'Site Supervisor', exp: 10 },
+  { name: 'Saddam Hussain', role: 'Supervisor', exp: 8 },
+  { name: 'Kishan Rajbhar', role: 'Supervisor', exp: 8 },
+  { name: 'Subhash Pal', role: 'Site Coordinator', exp: 6 },
+  { name: 'Tushar Savinkar', role: 'Site Supervisor', exp: 6 },
+  { name: 'Bajarangi Pal', role: 'Site Supervisor', exp: 5 },
+  { name: 'Santosh Maurya', role: 'Site Supervisor', exp: 5 },
+  { name: 'Kalpesh Shinde', role: 'Jr. Engineer', exp: 3 },
+  { name: 'Sangeeta Pal', role: 'Administration', exp: 9 },
+  { name: 'Anjali Tiwari', role: 'Accountant / Admin', exp: 5 },
+];
+
+export const WORKFORCE_TOTALS = {
+  poclainCrew: { operators: 30, helpers: 30 },
+  dumperCrew: { operators: 50, helpers: 50 },
+  pilingCrew: { operators: 10, helpers: 30 },
+  supervisoryStaff: 29,
+  totalFieldPersonnel: 229,
+};

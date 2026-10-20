@@ -173,21 +173,30 @@ const statusMapping: Record<string, string> = {
 
 
 
-export const projectData = Object.keys(projectsMap).map((folderName) => {
+const valueMapping: Record<string, string> = {
+  "Prestige mulund": "₹20,05,99,882",
+  "Raymond Bandra Site": "₹20,00,00,000",
+  "Piramal": "₹20,50,00,000",
+  "L & T Forest Hill": "₹16,12,21,470",
+  "Welspun": "₹15,71,75,862",
+  "Prime Focus": "₹11,70,00,000",
+  "Verve Greens": "₹10,48,42,000",
+  "HCC Jammu": "₹9,37,65,540",
+  "Piraml Revanta Mulund": "₹9,44,87,166",
+  "B E Billimoria Andheri": "₹2,90,24,247",
+  "Ashirwad Bunglow": "₹1,95,00,000",
+  "Breach Candy Hospital": "₹1,02,50,074",
+};
 
+export const projectData = Object.keys(projectsMap).map((folderName) => {
   const name = nameMapping[folderName] || folderName;
 
   return {
-
     title: titleMapping[folderName] || folderName,
-
     name: name,
-
-
     images: projectsMap[folderName],
-
-    scope: scopeMapping[folderName] || '', // Add scope to project data
-    status: statusMapping[folderName] || 'in progress'
+    scope: scopeMapping[folderName] || 'Piling, Anchoring & Excavation',
+    status: statusMapping[folderName] || 'Completed',
+    contractValue: valueMapping[folderName] || '',
   };
-
 }).sort((a, b) => b.images.length - a.images.length);

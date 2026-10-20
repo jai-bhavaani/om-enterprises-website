@@ -9,7 +9,7 @@ interface LogoProps {
   layoutId?: string; // To be used by Framer Motion
 }
 
-export const Logo: React.FC<LogoProps> = ({ className, size = 'medium', layoutId }) => {
+export const Logo: React.FC<LogoProps> = ({ className = '', size = 'medium', layoutId }) => {
   let sizeClasses = '';
   switch (size) {
     case 'small':
@@ -19,10 +19,10 @@ export const Logo: React.FC<LogoProps> = ({ className, size = 'medium', layoutId
       sizeClasses = 'h-10 w-auto'; // Default for Navbar
       break;
     case 'large':
-      sizeClasses = 'h-16 w-auto'; // For Hero section, for example
+      sizeClasses = 'h-16 w-auto';
       break;
     case 'splash':
-      sizeClasses = 'h-48 md:h-64 lg:h-80 w-auto'; // Large size for splash screen
+      sizeClasses = 'h-20 sm:h-24 md:h-28 w-auto'; // Balanced high-clarity size
       break;
     default:
       sizeClasses = 'h-10 w-auto';
@@ -32,8 +32,8 @@ export const Logo: React.FC<LogoProps> = ({ className, size = 'medium', layoutId
     <motion.img
       src={logoSrc}
       alt="OM Enterprises Logo"
-      className={`${sizeClasses} ${className} rounded-lg`}
-      layoutId={layoutId} // Essential for shared layout animation
+      className={`${sizeClasses} ${className} rounded-lg object-contain`}
+      layoutId={layoutId}
     />
   );
 };

@@ -158,7 +158,7 @@ export const Timeline: React.FC = () => {
   }, [isOpen]);
 
   return (
-    <section id="timeline" ref={sectionRef} className="relative bg-background border-t border-slate-800">
+    <section id="timeline" ref={sectionRef} className="relative bg-background border-t border-border-subtle">
       
       {/* Sticky Background Layer - Only visible when open */}
       <div className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-1000 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
@@ -169,12 +169,14 @@ export const Timeline: React.FC = () => {
               ref={(el) => { bgRefs.current[i] = el; }}
               className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
               style={{ 
-                backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.7)), url(${data.img})`,
+                backgroundImage: `url(${data.img})`,
                 opacity: 0 
               }}
-            />
+            >
+              <div className="absolute inset-0 bg-background/90 backdrop-blur-xs" />
+            </div>
           ))}
-          {/* Blueprint Grid Overlay */}
+          {/* Grid Overlay */}
           <div className="absolute inset-0 bg-blueprint-pattern opacity-10" style={{ backgroundSize: '40px 40px' }}></div>
         </div>
       </div>
@@ -182,8 +184,8 @@ export const Timeline: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 relative z-10 py-20">
         {/* Header Section (Always Visible) */}
         <div className="text-center mb-10 relative z-20">
-           <span className="font-mono text-safety text-xs uppercase tracking-widest border border-safety px-2 py-1">Est. 2004</span>
-           <h2 className="font-header text-5xl md:text-6xl text-white uppercase mt-6 mb-8">Our <span className="text-stroke-safety">Legacy</span></h2>
+           <span className="font-mono text-safety text-xs uppercase tracking-widest border border-safety px-2 py-1 font-semibold">Est. 2004</span>
+           <h2 className="font-header text-5xl md:text-6xl text-text-primary uppercase mt-6 mb-8">Our <span className="text-stroke-safety">Legacy</span></h2>
            
            {!isOpen && (
              <div className="animate-bounce-custom">
@@ -193,7 +195,7 @@ export const Timeline: React.FC = () => {
                  onClick={() => setIsOpen(true)}
                  icon={<span className="text-xl">↓</span>}
                />
-               <p className="font-body text-concrete text-sm mt-4 opacity-60">Click to unfold 20 years of excellence</p>
+               <p className="font-body text-text-secondary text-sm mt-4 opacity-75">Click to unfold 20 years of excellence</p>
              </div>
            )}
         </div>
@@ -222,19 +224,19 @@ export const Timeline: React.FC = () => {
                 >
                   {/* Content Side */}
                   <div className={`w-full md:w-1/2 ${index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12 md:text-left'} text-center`}>
-                    <div className="bg-surface/60 backdrop-blur-md border border-slate-700 p-6 relative group hover:border-safety/50 transition-colors duration-300 shadow-2xl">
+                    <div className="bg-surface/90 backdrop-blur-md border border-border-subtle p-6 relative group hover:border-safety/50 transition-colors duration-300 shadow-xl rounded">
                        {/* Decorative Corners */}
                        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-safety opacity-50"></div>
                        <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-safety opacity-50"></div>
                        
                        {/* Giant Year Number */}
-                       <span className="font-header text-7xl md:text-9xl font-bold text-white/5 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-0 select-none pointer-events-none">
+                       <span className="font-header text-7xl md:text-9xl font-bold text-text-primary/5 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-0 select-none pointer-events-none">
                          {item.year}
                        </span>
                        
                        <div className="relative z-10">
-                          <h3 className="font-header text-3xl text-white uppercase mb-4 text-shadow-sm">{item.title}</h3>
-                          <p className="font-body text-concrete leading-relaxed font-light">{item.desc}</p>
+                          <h3 className="font-header text-3xl text-text-primary uppercase mb-4 text-shadow-sm">{item.title}</h3>
+                          <p className="font-body text-text-secondary leading-relaxed font-light">{item.desc}</p>
                        </div>
                     </div>
                   </div>
@@ -243,7 +245,7 @@ export const Timeline: React.FC = () => {
                   <div className="relative z-20 flex-shrink-0">
                      {/* Survey Marker SVG */}
                      <div className="w-16 h-16 relative flex items-center justify-center">
-                        <div className="absolute inset-0 bg-background rounded-full border-4 border-slate-800 shadow-[0_0_20px_rgba(255,107,0,0.3)]"></div>
+                        <div className="absolute inset-0 bg-surface rounded-full border-4 border-border-subtle shadow-md"></div>
                         <svg viewBox="0 0 40 40" className="w-10 h-10 animate-spin-slow" style={{ animationDuration: '10s' }}>
                           <circle cx="20" cy="20" r="18" className="stroke-safety stroke-2 fill-transparent opacity-50" strokeDasharray="4,4" />
                           <line x1="20" y1="0" x2="20" y2="40" className="stroke-safety stroke-1" />

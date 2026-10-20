@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
+import { HeroCarousel, HeroCarouselItem } from './components/HeroCarousel';
 import { Button } from './components/Button';
 import { ButtonVariant } from './types';
 import { ServiceCard } from './components/ServiceCard';
@@ -21,12 +21,15 @@ import { ProjectLightbox } from './components/ProjectLightbox'; // Import Projec
 import { ProjectsPage } from './components/ProjectsPage'; // Corrected import
 import { stats, services } from './data';
 import { projectData } from './projects.config'; // New import for structured project data
-// import { projects } from './src/data/projects'; // Old import
-// import { Project } from './types'; // Project interface might not be needed if not defining new types for projectData
+import { Contact } from './components/Contact';
+import { MachinerySection } from './components/MachinerySection';
+import { AdminRoutes } from './src/admin/AdminRoutes';
+import { ThemeProvider } from './src/context/ThemeContext';
+import { useHeroSlides, useProjects } from './src/hooks/useCMS';
 
 import AshirwadBunglowImage2 from './src/assets/projects/Ashirwad Bunglow/IMG-20160625-WA0010.jpg'; // Import Ashirwad Bunglow Image 2
 
-import { CarouselItem } from './components/ImageCarousel';
+
 
 // Component for the main home page content
 const HomeContent: React.FC = () => {
@@ -34,18 +37,9 @@ const HomeContent: React.FC = () => {
   const [lightboxImages, setLightboxImages] = useState<string[]>([]);
   const [initialImageIndex, setInitialImageIndex] = useState(0);
 
-  // Logic to select random images for the Hero section
-  const potentialHeroItems: CarouselItem[] = [];
-  projectData.forEach(project => {
-    if (project.images && project.images.length > 0) {
-      // Pick one random image from the project
-      const randomImage = project.images[Math.floor(Math.random() * project.images.length)];
-      potentialHeroItems.push({ src: randomImage, title: project.title, scope: project.scope });
-    }
-  });
-
-  // Shuffle the collected images and take up to 10
-  const selectedHeroItems = potentialHeroItems.sort(() => 0.5 - Math.random()).slice(0, 10);
+  // Consume slides directly from Admin CMS (with responsive desktop & mobile art direction)
+  const { slides: heroSlides } = useHeroSlides();
+  const { projects: liveProjects } = useProjects();
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -66,104 +60,135 @@ const HomeContent: React.FC = () => {
   return (
     <>
       <Navbar />
-      
-      <main className="relative z-10 flex flex-col">
-        <Hero heroCarouselItems={selectedHeroItems} />
-        
 
-        
+      <main className="relative z-10 flex flex-col">
+        <HeroCarousel items={heroSlides} />
+
+
+
         {/* Projects Grid Section */}
         <section id="projects" className="scroll-mt-28 py-20 px-4 bg-background relative overflow-hidden">
           {/* Background Grid */}
           <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
 
           <div className="max-w-7xl mx-auto relative z-10">
-             <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-                <div>
-                   <span className="font-body text-safety text-xs uppercase tracking-widest mb-2 block">Our Portfolio</span>
-                   <h2 className="font-header text-5xl md:text-6xl uppercase font-bold text-white">Project Spotlights</h2>
-                </div>
-                {/* Remove Link to="/projects" and ensure button is standalone */}
-                <Link to="/projects">
-                  <Button label="View All Projects" variant={ButtonVariant.OUTLINE} />
-                </Link>
-             </div>
+            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+              <div>
+                <span className="font-body text-safety text-xs uppercase tracking-widest mb-2 block">Our Portfolio</span>
+                <h2 className="font-header text-5xl md:text-6xl uppercase font-bold text-text-primary">Project Spotlights</h2>
+              </div>
+              {/* Standalone View All Projects link */}
+              <Link to="/projects">
+                <Button label="View All Projects" variant={ButtonVariant.OUTLINE} />
+              </Link>
+            </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                             {(() => {
-                               let homepageProjects = projectData.slice(0, 4);
-                               const vjtfBorivaliIndex = homepageProjects.findIndex(p => p.title === "VJTF Borivali");
-                               
-                               if (vjtfBorivaliIndex !== -1) {
-                                 const ltForestHillProject = projectData.find(p => p.title === "L&T Forest Hill");
-                                 if (ltForestHillProject) {
-                                   homepageProjects[vjtfBorivaliIndex] = ltForestHillProject;
-                                 }
-                               }
-                               return homepageProjects.map((project, i) => ( // Display a subset for spotlights, e.g., first 4
-                                 <div
-                                   key={i}
-                                   className="group relative h-80 bg-surface border border-slate-800 overflow-hidden cursor-pointer"
-                                   onClick={() => openLightbox(project.images, 0)} // Open lightbox on card click
-                                 >
-                                    <ImageWithFallback
-                                     src={project.images[0]} // Use first image from the array
-                                     fallbackSrc="https://placehold.co/800x600/png?text=Project+Image"
-                                     alt={project.title}
-                                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-50"
-                                   />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
-                                    
-                                    <div className="absolute bottom-0 left-0 w-full p-8">
-                                       <div className="flex justify-between items-end">
-                                          <div>
-                                             {/* Removed id and status as they are not in the new projectData structure */}
-                                             <h3 className="font-header text-3xl text-white uppercase">{project.title}</h3>
-                               {project.scope && <p className="font-body text-concrete-light text-base mt-1">{project.scope}</p>}
-                                             {/* Removed client as it is not in the new projectData structure */}
-                                          </div>
-                                          <div className="w-10 h-10 border border-white/20 flex items-center justify-center text-white group-hover:bg-safety group-hover:text-black group-hover:border-safety transition-all">
-                                             ↗
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                               ));
-                             })()}             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(() => {
+                const sourceProjects = liveProjects.length > 0 ? liveProjects : projectData;
+                let homepageProjects = sourceProjects.slice(0, 4);
+                const vjtfBorivaliIndex = homepageProjects.findIndex(p => p.title === "VJTF Borivali");
+
+                if (vjtfBorivaliIndex !== -1) {
+                  const ltForestHillProject = sourceProjects.find(p => p.title === "L&T Forest Hill");
+                  if (ltForestHillProject) {
+                    homepageProjects[vjtfBorivaliIndex] = ltForestHillProject;
+                  }
+                }
+                return homepageProjects.map((project, i) => (
+                  <Link
+                    key={project.id || i}
+                    to={`/projects?project=${encodeURIComponent(project.title)}`}
+                    className="group relative h-80 sm:h-96 rounded-xl bg-slate-900 border border-border-subtle overflow-hidden cursor-pointer shadow-md hover:shadow-2xl hover:border-safety/60 transition-all duration-300 block"
+                    title={`View technical specifications and case study for ${project.title}`}
+                  >
+                    <ImageWithFallback
+                      src={project.images[0]}
+                      fallbackSrc="https://placehold.co/800x600/png?text=Project+Image"
+                      alt={project.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                    {/* Rich cinematic gradient overlay for perfect contrast in both light and dark mode */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent transition-opacity duration-300"></div>
+
+                    {/* Subtle top vignette for depth */}
+                    <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none"></div>
+
+                    {/* Scope & Contract Value badges */}
+                    <div className="absolute top-4 inset-x-4 z-10 flex items-center justify-between pointer-events-none">
+                      {project.scope ? (
+                        <span className="font-mono text-xs uppercase tracking-wider px-2.5 py-1 rounded bg-black/60 backdrop-blur-md text-white/90 border border-white/20 shadow-sm">
+                          {project.scope.split(',')[0]}
+                        </span>
+                      ) : <div />}
+                      {((project as any).contractValue || (project as any).project_value) && (
+                        <span className="font-mono text-xs font-bold px-2.5 py-1 rounded bg-safety text-black shadow-md">
+                          {(project as any).contractValue || (project as any).project_value}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="absolute bottom-0 left-0 w-full p-6 sm:p-8 z-10">
+                      <div className="flex justify-between items-end gap-4">
+                        <div className="flex-1">
+                          <h3 className="font-header text-2xl sm:text-3xl text-white uppercase tracking-wide group-hover:text-safety transition-colors drop-shadow-sm">
+                            {project.title}
+                          </h3>
+                          {project.scope && (
+                            <p className="font-body text-slate-200 text-sm sm:text-base mt-1.5 font-medium line-clamp-1 drop-shadow-xs">
+                              {project.scope}
+                            </p>
+                          )}
+                          <span className="inline-flex items-center gap-1.5 text-xs font-mono text-safety font-bold uppercase tracking-wider mt-2 group-hover:translate-x-1 transition-transform">
+                            <span>View Technical Dossier</span>
+                            <span>→</span>
+                          </span>
+                        </div>
+                        <div className="w-10 h-10 rounded-lg border border-white/30 bg-black/40 backdrop-blur-md flex items-center justify-center text-white group-hover:bg-safety group-hover:border-safety group-hover:text-[var(--color-safety-text)] transition-all flex-shrink-0">
+                          ↗
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ));
+              })()} 
+            </div>
           </div>
         </section>
 
-        
+
 
         {/* Services Section */}
-        <section id="services" className="scroll-mt-28 py-20 px-4 bg-slate-900 relative">
-           {/* Pattern overlay */}
-           <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+        <section id="services" className="scroll-mt-28 py-20 px-4 bg-surface-subtle relative border-t border-border-subtle">
+          {/* Pattern overlay */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
 
-           <div className="max-w-7xl mx-auto">
-             <div className="mb-10 relative z-10 text-center">
-               <h3 className="font-header text-4xl text-white uppercase mb-4">Our Core Services</h3>
-               <p className="font-body text-concrete text-sm">Deploying advanced engineering solutions.</p>
-             </div>
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 relative z-10 text-center">
+              <h3 className="font-header text-4xl text-text-primary uppercase mb-4">Our Core Services</h3>
+              <p className="font-body text-text-secondary text-sm">Deploying advanced engineering solutions.</p>
+            </div>
 
-             <div className="flex overflow-x-auto gap-6 relative z-10 pb-8 -mb-8">
-               {services.map((service) => (
-                 <div key={service.id} className="flex-shrink-0 w-80">
-                   <ServiceCard 
-                     id={service.id}
-                     title={service.title}
-                     desc={service.desc}
-                     type={service.type}
-                   />
-                 </div>
-               ))}
-             </div>
-           </div>
+            <div className="flex overflow-x-auto lg:grid lg:grid-cols-4 gap-6 relative z-10 pb-6 lg:pb-0 no-scrollbar">
+              {services.map((service) => (
+                <div key={service.id} className="flex-shrink-0 w-80 sm:w-84 lg:w-auto h-full">
+                  <ServiceCard
+                    id={service.id}
+                    title={service.title}
+                    desc={service.desc}
+                    type={service.type}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
-        
-        {/* About Section - Redesigned for Visual Storytelling (Fixed) */}
-        <section id="about" className="scroll-mt-28 py-20 px-4 bg-surface/20 border-t border-slate-800">
+        {/* Heavy Plant & Machinery Arsenal (Owned Fleet Showcase) */}
+        <MachinerySection />
+
+        {/* About Section - Redesigned for Visual Storytelling */}
+        <section id="about" className="scroll-mt-28 py-20 px-4 bg-surface/30 border-t border-border-subtle">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
@@ -175,29 +200,29 @@ const HomeContent: React.FC = () => {
                     <span className="font-body text-safety text-sm uppercase tracking-widest">About Us</span>
                   </TextReveal>
                 </div>
-                
+
                 <TextReveal>
-                  <h2 className="font-header text-5xl md:text-7xl uppercase font-bold text-white mb-8 leading-normal">
-                    A Legacy of <br/><span className="text-steel-cut">Strength</span>
+                  <h2 className="font-header text-5xl md:text-7xl uppercase font-bold text-text-primary mb-8 leading-normal">
+                    A Legacy of <br /><span className="text-text-secondary">Strength</span>
                   </h2>
                 </TextReveal>
 
                 <TextReveal>
-                  <p className="font-body text-concrete-light text-base md:text-lg max-w-xl leading-relaxed mb-3">
+                  <p className="font-body text-text-secondary text-base md:text-lg max-w-xl leading-relaxed mb-3">
                     For over 20 years, OM Enterprises has delivered reliable civil and foundational engineering solutions, enabling architects and developers to build complex projects with confidence.</p>
                 </TextReveal>
 
                 {/* Animated Stats */}
-                <div className="grid grid-cols-2 gap-6 border-t border-slate-700/50 pt-3">
+                <div className="grid grid-cols-2 gap-6 border-t border-border-subtle pt-3">
                   {stats.map((stat, i) => (
                     <div key={i} className="group">
-                        <div className="font-header text-4xl md:text-5xl text-white font-bold mb-1 group-hover:text-safety transition-colors">
-                          <CountUp end={stat.value} suffix={stat.suffix} />
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="h-px w-4 bg-safety group-hover:w-8 transition-all duration-300"></div>
-                          <div className="font-body text-xs text-concrete-light uppercase tracking-widest">{stat.label}</div>
-                        </div>
+                      <div className="font-header text-4xl md:text-5xl text-text-primary font-bold mb-1 group-hover:text-safety transition-colors">
+                        <CountUp end={stat.value} suffix={stat.suffix} />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="h-px w-4 bg-safety group-hover:w-8 transition-all duration-300"></div>
+                        <div className="font-body text-xs text-text-secondary uppercase tracking-widest">{stat.label}</div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -206,13 +231,13 @@ const HomeContent: React.FC = () => {
               {/* Right Side: Visual Storytelling Image */}
               <div className="lg:w-7/12 w-full">
                 <figure>
-                  <div className="h-96 lg:h-[500px] bg-background border-2 border-slate-800 relative">
-                    <img 
+                  <div className="h-96 lg:h-[500px] bg-background border-2 border-border-subtle relative shadow-lg">
+                    <img
                       src={AshirwadBunglowImage2}
                       alt="Ashirwad Bunglow Project Image"
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-4 left-4 bg-safety text-background font-body text-xs uppercase tracking-widest px-3 py-1">
+                    <div className="absolute top-4 left-4 bg-safety text-[var(--color-safety-text)] font-body text-xs uppercase tracking-widest px-3 py-1 font-semibold">
                       EST. 2004
                     </div>
                   </div>
@@ -223,7 +248,7 @@ const HomeContent: React.FC = () => {
           </div>
         </section>
 
-        
+
 
         <WhyChooseUs />
 
@@ -240,102 +265,155 @@ const HomeContent: React.FC = () => {
           <ClientSection />
         </section>
 
-        <section id="contact" className="scroll-mt-28 py-20 px-4 text-center bg-background border-t border-slate-800">
-          <div className="text-center">
-            <h3 className="font-header text-3xl uppercase font-bold text-white mb-4">Contact Us Directly</h3>
-            <p className="font-body text-concrete/80 text-lg mb-8">For immediate consultation, contact our project director directly.</p>
-            <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 font-body text-base text-concrete">
-              <div>
-                  <span className="block text-xs text-safety uppercase tracking-widest mb-1">Email</span>
-                  omenterprise20@gmail.com
-              </div>
-              <div>
-                  <span className="block text-xs text-safety uppercase tracking-widest mb-1">Phone</span>
-                  +91-022-49697792
-              </div>
-              <div className="leading-relaxed">
-  <span className="block text-xs text-safety uppercase tracking-widest mb-1">OFFICE</span>
-  <p>
-    412 B2B Agrawal Co-Op Premises,<br />
-    D’Monte Lane, Kanchpada,<br />
-    Malad West, Mumbai – 400064,<br />
-    Maharashtra, India.
-  </p>
-</div>
-
-            </div>
-          </div>
+        <section id="contact" className="scroll-mt-28">
+          <Contact />
         </section>
 
-              </main>
+      </main>
 
-        <footer className="footer-reveal border-t border-slate-800 bg-background py-8 px-4">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="font-header text-sm uppercase tracking-widest text-concrete">
-              OM ENTERPRISES <span className="text-safety">©2025</span>
+      <footer className="footer-reveal border-t border-border-subtle bg-surface-subtle pt-16 pb-12 px-4">
+        <div className="max-w-7xl mx-auto space-y-12">
+          {/* Top Row: Corporate Identity & Direct Inquiries */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-10 border-b border-border-subtle">
+            <div className="lg:col-span-5 space-y-3">
+              <span className="font-header text-xl sm:text-2xl uppercase font-bold text-text-primary tracking-wide block">
+                OM ENTERPRISES
+              </span>
+              <p className="font-body text-xs text-safety uppercase tracking-widest font-mono">
+                Civil Engineering Construction Contractors &bull; Edilite Constructions
+              </p>
+              <p className="font-body text-xs text-text-secondary leading-relaxed max-w-md">
+                Specialized B2B heavy civil substructure, deep multi-tier basement rock excavation, contiguous bored piling, and prestressed rock anchoring contractor delivering landmark developments across Mumbai for over two decades.
+              </p>
             </div>
-            <div className="font-body text-[10px] text-slate-600 uppercase tracking-widest">
-              Foundation & Civil Engineering Specialists
+
+            <div className="lg:col-span-4 space-y-2 text-xs">
+              <span className="font-mono text-xs uppercase tracking-widest text-text-secondary font-bold block mb-1">
+                Headquarters & Registered Office
+              </span>
+              <p className="text-text-primary leading-relaxed font-body">
+                412, B2B Agrawal Centre, D’Monte Lane, Kanchpada, Malad West, Mumbai – 400064, Maharashtra, India.
+              </p>
+              <p className="text-text-secondary pt-1 font-mono">
+                Office Hours: Monday – Saturday, 9:00 AM – 7:00 PM
+              </p>
+            </div>
+
+            <div className="lg:col-span-3 space-y-2 text-xs">
+              <span className="font-mono text-xs uppercase tracking-widest text-safety font-bold block mb-1">
+                Tenders & Contracts Desk
+              </span>
+              <p className="text-text-primary font-bold font-header text-sm">
+                Mr. Ashok Kumar Pal (Proprietor)
+              </p>
+              <a
+                href="tel:+919930900048"
+                className="font-mono text-text-secondary hover:text-safety transition-colors block"
+              >
+                Mob: +91 99309 00048
+              </a>
+              <a
+                href="mailto:omenterprise20@gmail.com"
+                className="font-mono text-text-secondary hover:text-safety transition-colors block"
+              >
+                omenterprise20@gmail.com
+              </a>
             </div>
           </div>
-        </footer>
 
-        {isLightboxOpen && lightboxImages.length > 0 && (
-          <ProjectLightbox
-            images={lightboxImages}
-            initialImageIndex={initialImageIndex}
-            onClose={closeLightbox}
-          />
-        )}
+          {/* Middle Row: Statutory Registrations & Legal Verification (Report Benchmark) */}
+          <div className="bg-surface/50 border border-border-subtle rounded-xl p-5">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-text-secondary block mb-3 font-bold">
+              Government Registrations & Statutory Accreditations
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs font-mono">
+              <div className="p-2 rounded bg-surface border border-border-subtle">
+                <span className="text-[9px] text-text-secondary uppercase block">GSTIN (Maharashtra)</span>
+                <span className="text-[11px] font-bold text-text-primary block mt-0.5">27ANBPP0974C1Z5</span>
+              </div>
+              <div className="p-2 rounded bg-surface border border-border-subtle">
+                <span className="text-[9px] text-text-secondary uppercase block">PAN No.</span>
+                <span className="text-[11px] font-bold text-text-primary block mt-0.5">ANBPP0974C</span>
+              </div>
+              <div className="p-2 rounded bg-surface border border-border-subtle">
+                <span className="text-[9px] text-text-secondary uppercase block">ISO Quality Standard</span>
+                <span className="text-[11px] font-bold text-safety block mt-0.5">ISO 9001:2015</span>
+              </div>
+              <div className="p-2 rounded bg-surface border border-border-subtle">
+                <span className="text-[9px] text-text-secondary uppercase block">MSME Udyam</span>
+                <span className="text-[11px] font-bold text-text-primary block mt-0.5">UDYAM-MH-19-0080669</span>
+              </div>
+              <div className="p-2 rounded bg-surface border border-border-subtle">
+                <span className="text-[9px] text-text-secondary uppercase block">EPFO Registration</span>
+                <span className="text-[11px] font-bold text-text-primary block mt-0.5">KDMAL1600126000</span>
+              </div>
+              <div className="p-2 rounded bg-surface border border-border-subtle">
+                <span className="text-[9px] text-text-secondary uppercase block">ESIC Registration</span>
+                <span className="text-[11px] font-bold text-text-primary block mt-0.5">35000403150001099</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Row: Copyright & Admin Portal */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-border-subtle text-xs text-text-secondary font-mono">
+            <div>
+              &copy; {new Date().getFullYear()} OM ENTERPRISES &bull; Edilite Constructions. All Rights Reserved.
+            </div>
+            <div className="flex items-center gap-6">
+              <span className="text-[10px] text-text-muted">IS 2911 &bull; IS 10270 &bull; BS 8081 Compliant</span>
+              <Link
+                to="/admin/login"
+                className="text-[11px] text-text-muted hover:text-safety transition-colors uppercase tracking-wider"
+              >
+                CMS Portal &rarr;
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {isLightboxOpen && lightboxImages.length > 0 && (
+        <ProjectLightbox
+          images={lightboxImages}
+          initialImageIndex={initialImageIndex}
+          onClose={closeLightbox}
+        />
+      )}
     </>
   );
 };
 
 // Main App component for routing and splash screen
 const App: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
 
-  useEffect(() => {
-    // Remove the initial HTML loader once the React app is mounted
-    const initialLoader = document.getElementById('initial-loader');
-    if (initialLoader) {
-      initialLoader.style.transition = 'opacity 0.5s ease-out';
-      initialLoader.style.opacity = '0';
-      setTimeout(() => { // Keep a small timeout to allow opacity transition
-        initialLoader.style.display = 'none';
-        initialLoader.remove();
-      }, 500);
-    }
-
-    // Simulate loading time and then hide splash screen
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
 
   return (
-    <div className="min-h-screen bg-background text-slate-50 relative selection:bg-safety selection:text-black">
-      <AnimatePresence>
-        {isLoading && <SplashScreen key="splash-screen" isLoading={isLoading} />}
-      </AnimatePresence>
+    <ThemeProvider>
+      <div className="min-h-screen bg-background text-text-primary relative selection:bg-safety selection:text-[var(--color-safety-text)] transition-colors duration-300">
+        <AnimatePresence>
+          {showSplash && (
+            <SplashScreen
+              key="splash-screen"
+              onComplete={handleSplashComplete}
+            />
+          )}
+        </AnimatePresence>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isLoading ? 0 : 1, transition: { delay: isLoading ? 1.5 : 0, duration: 0.5 } }}
-        className="relative z-10"
-      >
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomeContent />} />
-            <Route path="/projects" element={<ProjectsPage />} /> {/* Added route for ProjectsPage */}
-          </Routes>
-        </BrowserRouter>
-      </motion.div>
-    </div>
+        <div className="relative z-10">
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<HomeContent />} />
+              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/admin/*" element={<AdminRoutes />} />
+            </Routes>
+          </BrowserRouter>
+        </div>
+      </div>
+    </ThemeProvider>
   );
 };
 

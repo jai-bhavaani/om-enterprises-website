@@ -61,7 +61,7 @@ export const KineticDivider: React.FC = () => {
           width: 100%;
           overflow: hidden;
           padding: 4rem 0;
-          background-color: #0f172a; /* bg-background */
+          background-color: var(--color-background);
         }
         .marquee {
           display: flex;
@@ -72,8 +72,9 @@ export const KineticDivider: React.FC = () => {
           font-size: 10rem;
           font-weight: 700;
           color: transparent;
-          -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
-          text-stroke: 1px rgba(255, 255, 255, 0.1);
+          -webkit-text-stroke: 1px var(--color-border-strong);
+          text-stroke: 1px var(--color-border-strong);
+          opacity: 0.25;
           padding: 0 2rem;
         }
       `}</style>
