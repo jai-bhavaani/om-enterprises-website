@@ -136,3 +136,16 @@ CREATE POLICY "Admins can view and manage contact messages"
     ON public.contact_messages FOR ALL
     USING (true)
     WITH CHECK (true);
+
+-- Company Content Key-Value Store
+ALTER TABLE IF EXISTS public.company_content ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public can view company content" ON public.company_content;
+CREATE POLICY "Public can view company content"
+    ON public.company_content FOR SELECT
+    USING (true);
+
+DROP POLICY IF EXISTS "Admins have full access to company content" ON public.company_content;
+CREATE POLICY "Admins have full access to company content"
+    ON public.company_content FOR ALL
+    USING (true)
+    WITH CHECK (true);

@@ -32,6 +32,14 @@ export const MediaManager: React.FC = () => {
   const [uploadProgressText, setUploadProgressText] = useState('');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Subscribe to live adminStore updates
+  React.useEffect(() => {
+    const unsubscribe = adminStore.subscribe(() => {
+      setMediaList(adminStore.getMedia());
+    });
+    return unsubscribe;
+  }, []);
+
   const reloadMedia = () => {
     setMediaList(adminStore.getMedia());
   };
@@ -100,13 +108,10 @@ export const MediaManager: React.FC = () => {
     const item = mediaList.find(m => m.id === id);
     if (!item) return;
 
-    const res = adminStore.deleteMediaItem(id);
+    const res = await adminStore.deleteMediaItem(id);
     if (!res.success) {
       setDeleteWarning(res.error || 'Cannot delete image in use.');
     } else {
-      if (item.storage_path) {
-        await deleteMediaFromStorage(item.storage_path, item.id);
-      }
       reloadMedia();
       handleCloseInspector();
       showToast('Media file removed from database & storage.');

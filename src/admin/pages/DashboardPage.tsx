@@ -16,9 +16,18 @@ import {
 import { adminStore } from '../adminStore';
 
 export const DashboardPage: React.FC = () => {
-  const [projects] = useState(() => adminStore.getProjects());
-  const [messages] = useState(() => adminStore.getMessages());
-  const [team] = useState(() => adminStore.getTeam());
+  const [projects, setProjects] = useState(() => adminStore.getProjects());
+  const [messages, setMessages] = useState(() => adminStore.getMessages());
+  const [team, setTeam] = useState(() => adminStore.getTeam());
+
+  React.useEffect(() => {
+    const unsubscribe = adminStore.subscribe(() => {
+      setProjects(adminStore.getProjects());
+      setMessages(adminStore.getMessages());
+      setTeam(adminStore.getTeam());
+    });
+    return unsubscribe;
+  }, []);
 
   const completedCount = projects.filter(p => p.status === 'Completed').length;
   const inProgressCount = projects.filter(p => p.status === 'In Progress' || (p.status as any) === 'in progress').length;

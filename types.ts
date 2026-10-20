@@ -13,12 +13,7 @@ export interface Metric {
   change: string;
 }
 
-export enum ButtonVariant {
-  PRIMARY = 'PRIMARY',
-  SECONDARY = 'SECONDARY',
-  OUTLINE = 'OUTLINE',
-  GHOST = 'GHOST'
-}
+export { ButtonVariant } from './components/Button';
 
 export interface Project {
   title: string;

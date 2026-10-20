@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Lock, Mail, ArrowRight, ShieldCheck, KeyRound, Sun, Moon } from 'lucide-react';
 import { useAdmin } from '../AdminContext';
 import { useTheme } from '../../context/ThemeContext';
+import logoSrc from '@/assets/images/logo.png';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -57,14 +58,18 @@ export const LoginPage: React.FC = () => {
       <div className="w-full max-w-md relative z-10">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-safety text-[var(--color-safety-text)] font-header font-bold text-3xl mb-3 shadow-lg shadow-safety/20">
-            OM
+          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-surface border border-border-subtle shadow-md mb-4">
+            <img
+              src={logoSrc}
+              alt="OM Enterprises Official Logo"
+              className="h-14 w-auto object-contain"
+            />
           </div>
           <h1 className="font-header text-3xl uppercase font-bold text-text-primary tracking-wider">
-            Admin Console
+            OM ADMIN
           </h1>
           <p className="text-sm text-text-secondary mt-1">
-            OM Enterprises &bull; Content Management System
+            OM Enterprises &bull; Edilite Construction Pvt. Ltd.
           </p>
         </div>
 

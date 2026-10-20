@@ -41,6 +41,14 @@ export const HeroManager: React.FC = () => {
 
   const mediaLibrary: MediaItem[] = adminStore.getMedia();
 
+  // Reactive subscription to AdminStore updates from Supabase
+  React.useEffect(() => {
+    const unsubscribe = adminStore.subscribe(() => {
+      setSlides(adminStore.getHeroSlides());
+    });
+    return unsubscribe;
+  }, []);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
@@ -154,9 +162,18 @@ export const HeroManager: React.FC = () => {
     }
   };
 
-  const handleSaveAll = () => {
-    adminStore.saveHeroSlides(slides);
-    showToast('Hero carousel slides published to live homepage.');
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSaveAll = async () => {
+    setIsSaving(true);
+    try {
+      await adminStore.saveHeroSlides(slides);
+      showToast('Hero carousel slides published to Supabase database.');
+    } catch (err: any) {
+      showToast('Failed to save slides: ' + (err.message || 'Unknown error'));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const currentPreviewSlide = slides[activePreviewIndex] || slides[0];
@@ -204,10 +221,11 @@ export const HeroManager: React.FC = () => {
 
           <button
             onClick={handleSaveAll}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-safety hover:bg-safety-hover text-[var(--color-safety-text)] font-header font-bold text-xs uppercase tracking-wider transition-colors shadow-lg shadow-safety/20 cursor-pointer"
+            disabled={isSaving}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-safety hover:bg-safety-hover disabled:opacity-50 text-[var(--color-safety-text)] font-header font-bold text-xs uppercase tracking-wider transition-colors shadow-lg shadow-safety/20 cursor-pointer"
           >
-            <Save className="w-4 h-4" />
-            <span>Publish Changes</span>
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            <span>{isSaving ? 'Publishing...' : 'Publish Changes'}</span>
           </button>
         </div>
       </div>
@@ -674,22 +692,35 @@ export const HeroManager: React.FC = () => {
               </button>
             </div>
 
-            {/* Grid of Library Media */}
-            <div className="p-4 overflow-y-auto flex-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {/* Grid of Library Media with Hover Expansion */}
+            <div className="p-4 overflow-y-auto flex-1 min-h-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 scrollbar-thin">
               {filteredMedia.map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => handleSelectMedia(item.public_url, item.id)}
-                  className="group relative aspect-video bg-surface-subtle rounded-xl overflow-hidden border border-border-subtle hover:border-safety cursor-pointer shadow-xs transition-all"
+                  className="group relative h-28 sm:h-32 rounded-xl overflow-visible cursor-pointer bg-slate-900 border border-border-subtle hover:border-safety transition-all shadow-sm"
                 >
-                  <img
-                    src={item.public_url}
-                    alt={item.alt_text || item.filename}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2 text-white">
-                    <span className="text-[10px] font-mono truncate">{item.filename}</span>
-                    <span className="text-[9px] text-safety uppercase font-bold mt-0.5">Click to Assign</span>
+                  <div
+                    onClick={() => handleSelectMedia(item.public_url, item.id)}
+                    className="w-full h-full rounded-xl overflow-hidden relative group-hover:scale-125 sm:group-hover:scale-135 group-hover:z-30 group-hover:shadow-2xl group-hover:ring-2 group-hover:ring-safety transition-all duration-200 ease-out origin-center bg-slate-900"
+                  >
+                    <img
+                      src={item.public_url}
+                      alt={item.alt_text || item.filename}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2 text-white">
+                      <div className="flex justify-end">
+                        <span className="px-1.5 py-0.5 bg-black/80 backdrop-blur-xs text-[9px] font-mono text-slate-300 rounded border border-white/10 truncate max-w-[140px]">
+                          {item.filename}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="px-2 py-1 bg-safety text-black text-[10px] font-header font-bold uppercase rounded shadow-sm">
+                          Assign Slide
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}

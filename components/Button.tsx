@@ -1,6 +1,14 @@
 import React, { useRef, useEffect } from 'react';
-import { ButtonVariant } from '../types';
 import { Link } from 'react-router-dom'; // Import Link
+
+export const ButtonVariant = {
+  PRIMARY: 'PRIMARY',
+  SECONDARY: 'SECONDARY',
+  OUTLINE: 'OUTLINE',
+  GHOST: 'GHOST'
+} as const;
+
+export type ButtonVariant = typeof ButtonVariant[keyof typeof ButtonVariant];
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;

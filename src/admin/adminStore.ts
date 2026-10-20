@@ -1,7 +1,22 @@
 import { projectData as staticProjects } from '../../projects.config';
 import { LEADERS as staticTeam } from '../data/team';
 import { services as staticServices, stats as staticStats } from '../../data';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { 
+  supabase, 
+  isSupabaseConfigured,
+  isUUID,
+  getAllProjects,
+  createProjectRecord,
+  updateProjectRecord,
+  deleteProjectRecord,
+  getAllHeroSlides,
+  saveHeroSlidesToDb,
+  getAllTeamMembers,
+  createTeamMemberRecord,
+  updateTeamMemberRecord,
+  deleteTeamMemberRecord
+} from '../lib/supabase';
+import { deleteMediaFromStorage } from '../lib/storage';
 import type { 
   Project, 
   HeroSlide, 
@@ -146,10 +161,28 @@ class AdminStore {
   private team: TeamMember[] = [];
   private messages: ContactMessage[] = [];
   private content = initialCompanyContent;
+  private listeners: Set<() => void> = new Set();
 
   constructor() {
     this.loadFromStorage();
     this.syncWithSupabase();
+  }
+
+  public subscribe(listener: () => void): () => void {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  }
+
+  private notify() {
+    this.listeners.forEach(fn => {
+      try {
+        fn();
+      } catch (err) {
+        console.error('Error notifying adminStore subscriber:', err);
+      }
+    });
   }
 
   private loadFromStorage() {
@@ -200,7 +233,6 @@ class AdminStore {
 
       if (liveMsgs && liveMsgs.length > 0) {
         this.messages = liveMsgs;
-        this.persist();
       }
 
       // 2. Fetch live media library
@@ -211,19 +243,41 @@ class AdminStore {
 
       if (liveMedia && liveMedia.length > 0) {
         this.media = liveMedia;
-        this.persist();
       }
 
       // 3. Fetch live team members
-      const { data: liveTeam } = await supabase
-        .from('team_members')
-        .select('*')
-        .order('display_order', { ascending: true });
-
+      const liveTeam = await getAllTeamMembers();
       if (liveTeam && liveTeam.length > 0) {
         this.team = liveTeam;
-        this.persist();
       }
+
+      // 4. Fetch live projects
+      const liveProjects = await getAllProjects();
+      if (liveProjects && liveProjects.length > 0) {
+        this.projects = liveProjects;
+      }
+
+      // 5. Fetch live hero slides
+      const liveHero = await getAllHeroSlides();
+      if (liveHero && liveHero.length > 0) {
+        this.hero = liveHero;
+      }
+
+      // 6. Fetch dynamic company content
+      const { data: contentData } = await supabase
+        .from('company_content')
+        .select('key, value');
+
+      if (contentData && contentData.length > 0) {
+        contentData.forEach((row: any) => {
+          if (row.key === 'company_content' && row.value) {
+            this.content = { ...this.content, ...row.value };
+          }
+        });
+      }
+
+      this.persist();
+      this.notify();
     } catch (e) {
       console.warn('Failed to sync adminStore with Supabase:', e);
     }
@@ -242,7 +296,7 @@ class AdminStore {
     }
   }
 
-  // --- PROJECTS ---
+  // --- PROJECTS CRUD ---
   getProjects(): Project[] {
     return [...this.projects];
   }
@@ -251,70 +305,128 @@ class AdminStore {
     return this.projects.find(p => p.id === id);
   }
 
-  saveProject(projectData: Partial<Project> & { title: string }): Project {
+  async saveProject(projectData: Partial<Project> & { title: string }): Promise<Project> {
     const existingIndex = this.projects.findIndex(p => p.id === projectData.id);
-    if (existingIndex >= 0) {
-      const updated: Project = {
-        ...this.projects[existingIndex],
-        ...projectData,
-        updated_at: new Date().toISOString(),
-      };
-      this.projects[existingIndex] = updated;
-      this.persist();
-      return updated;
+    let resultProject: Project;
+
+    if (existingIndex >= 0 && projectData.id && isUUID(projectData.id)) {
+      if (isSupabaseConfigured && supabase) {
+        const res = await updateProjectRecord(projectData.id, projectData);
+        if (res.success && res.data) {
+          resultProject = {
+            ...res.data,
+            images: projectData.images || this.projects[existingIndex].images,
+          };
+        } else {
+          resultProject = {
+            ...this.projects[existingIndex],
+            ...projectData,
+            updated_at: new Date().toISOString(),
+          };
+        }
+      } else {
+        resultProject = {
+          ...this.projects[existingIndex],
+          ...projectData,
+          updated_at: new Date().toISOString(),
+        };
+      }
+      this.projects[existingIndex] = resultProject;
     } else {
-      const newProject: Project = {
-        id: `proj-${Date.now()}`,
-        title: projectData.title,
-        client_name: projectData.client_name || projectData.title,
-        scope: projectData.scope || 'Civil & Infrastructure',
-        status: projectData.status || 'In Progress',
-        description: projectData.description || '',
-        location: projectData.location || 'Mumbai, Maharashtra',
-        project_value: projectData.project_value || '',
-        delivery_model: projectData.delivery_model || 'Turnkey Substructure & Shoring',
-        basement_depth: projectData.basement_depth || '18m Depth / 3-4 Basements',
-        volume_cum: projectData.volume_cum || '50,000+ CuM Hard Basalt',
-        piling_spec: projectData.piling_spec || '800mm & 1000mm Dia Contiguous Bored Piles (IS 2911)',
-        anchoring_spec: projectData.anchoring_spec || '35T to 65T Multi-Strand Prestressed Rock Anchors (IS 10270)',
-        strata_type: projectData.strata_type || 'Massive Basalt Rock & High Coastal Water Table',
-        machinery_deployed: projectData.machinery_deployed || '2x Poclain EX-380, 4x EX-210 Breakers, 2x Piling Rigs, 16x Dumpers',
-        timeline_duration: projectData.timeline_duration || 'Completed on Fast-Track Schedule',
-        safety_metrics: projectData.safety_metrics || 'Zero LTI • Strict PPE & Vibration Compliance',
-        challenge_solution: projectData.challenge_solution || '',
-        scope_checklist: projectData.scope_checklist || '',
-        is_featured: projectData.is_featured ?? false,
-        is_published: projectData.is_published ?? true,
-        display_order: this.projects.length,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        images: projectData.images || [],
-      };
-      this.projects.unshift(newProject);
-      this.persist();
-      return newProject;
+      if (isSupabaseConfigured && supabase) {
+        const res = await createProjectRecord(projectData);
+        if (res.success && res.data) {
+          resultProject = res.data;
+        } else {
+          resultProject = {
+            id: `proj-${Date.now()}`,
+            title: projectData.title,
+            client_name: projectData.client_name || projectData.title,
+            scope: projectData.scope || 'Civil & Infrastructure',
+            status: projectData.status || 'In Progress',
+            description: projectData.description || '',
+            location: projectData.location || 'Mumbai, Maharashtra',
+            project_value: projectData.project_value || '',
+            delivery_model: projectData.delivery_model || 'Turnkey Substructure & Shoring',
+            basement_depth: projectData.basement_depth || '18m Depth / 3-4 Basements',
+            volume_cum: projectData.volume_cum || '50,000+ CuM Hard Basalt',
+            piling_spec: projectData.piling_spec || '800mm & 1000mm Dia Contiguous Bored Piles (IS 2911)',
+            anchoring_spec: projectData.anchoring_spec || '35T to 65T Multi-Strand Prestressed Rock Anchors (IS 10270)',
+            strata_type: projectData.strata_type || 'Massive Basalt Rock & High Coastal Water Table',
+            machinery_deployed: projectData.machinery_deployed || '2x Poclain EX-380, 4x EX-210 Breakers, 2x Piling Rigs, 16x Dumpers',
+            timeline_duration: projectData.timeline_duration || 'Completed on Fast-Track Schedule',
+            safety_metrics: projectData.safety_metrics || 'Zero LTI • Strict PPE & Vibration Compliance',
+            challenge_solution: projectData.challenge_solution || '',
+            scope_checklist: projectData.scope_checklist || '',
+            is_featured: projectData.is_featured ?? false,
+            is_published: projectData.is_published ?? true,
+            display_order: this.projects.length,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            images: projectData.images || [],
+          };
+        }
+      } else {
+        resultProject = {
+          id: `proj-${Date.now()}`,
+          title: projectData.title,
+          client_name: projectData.client_name || projectData.title,
+          scope: projectData.scope || 'Civil & Infrastructure',
+          status: projectData.status || 'In Progress',
+          description: projectData.description || '',
+          location: projectData.location || 'Mumbai, Maharashtra',
+          project_value: projectData.project_value || '',
+          delivery_model: projectData.delivery_model || 'Turnkey Substructure & Shoring',
+          basement_depth: projectData.basement_depth || '18m Depth / 3-4 Basements',
+          volume_cum: projectData.volume_cum || '50,000+ CuM Hard Basalt',
+          piling_spec: projectData.piling_spec || '800mm & 1000mm Dia Contiguous Bored Piles (IS 2911)',
+          anchoring_spec: projectData.anchoring_spec || '35T to 65T Multi-Strand Prestressed Rock Anchors (IS 10270)',
+          strata_type: projectData.strata_type || 'Massive Basalt Rock & High Coastal Water Table',
+          machinery_deployed: projectData.machinery_deployed || '2x Poclain EX-380, 4x EX-210 Breakers, 2x Piling Rigs, 16x Dumpers',
+          timeline_duration: projectData.timeline_duration || 'Completed on Fast-Track Schedule',
+          safety_metrics: projectData.safety_metrics || 'Zero LTI • Strict PPE & Vibration Compliance',
+          challenge_solution: projectData.challenge_solution || '',
+          scope_checklist: projectData.scope_checklist || '',
+          is_featured: projectData.is_featured ?? false,
+          is_published: projectData.is_published ?? true,
+          display_order: this.projects.length,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          images: projectData.images || [],
+        };
+      }
+      this.projects.unshift(resultProject);
     }
+
+    this.persist();
+    this.notify();
+    return resultProject;
   }
 
-  deleteProject(id: string): boolean {
+  async deleteProject(id: string): Promise<boolean> {
+    if (isSupabaseConfigured && supabase && isUUID(id)) {
+      await deleteProjectRecord(id);
+    }
     this.projects = this.projects.filter(p => p.id !== id);
     this.persist();
+    this.notify();
     return true;
   }
 
-  // --- MEDIA ---
+  // --- MEDIA CRUD ---
   getMedia(): MediaItem[] {
     return [...this.media];
   }
 
-  addMediaItem(item: Omit<MediaItem, 'id' | 'created_at'>): MediaItem {
+  addMediaItem(item: Omit<MediaItem, 'id' | 'created_at'> & { id?: string }): MediaItem {
     const newItem: MediaItem = {
       ...item,
-      id: `media-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      id: item.id || `media-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       created_at: new Date().toISOString(),
     };
     this.media.unshift(newItem);
     this.persist();
+    this.notify();
     return newItem;
   }
 
@@ -345,7 +457,7 @@ class AdminStore {
     return usedBy;
   }
 
-  deleteMediaItem(id: string): { success: boolean; error?: string } {
+  async deleteMediaItem(id: string): Promise<{ success: boolean; error?: string }> {
     const usage = this.getMediaUsage(id);
     if (usage.length > 0) {
       return {
@@ -353,17 +465,24 @@ class AdminStore {
         error: `Cannot delete. Image is actively in use by: ${usage.join(', ')}. Remove it from these sections first.`
       };
     }
+
+    const item = this.media.find(m => m.id === id);
+    if (item?.storage_path && isSupabaseConfigured && supabase) {
+      await deleteMediaFromStorage(item.storage_path, id);
+    }
+
     this.media = this.media.filter(m => m.id !== id);
     this.persist();
+    this.notify();
     return { success: true };
   }
 
-  // --- HERO ---
+  // --- HERO SLIDES CRUD ---
   getHeroSlides(): HeroSlide[] {
     return [...this.hero].sort((a, b) => a.display_order - b.display_order);
   }
 
-  saveHeroSlides(slides: HeroSlide[]) {
+  async saveHeroSlides(slides: HeroSlide[]) {
     this.hero = slides.map((s, idx) => ({
       ...s,
       display_order: idx,
@@ -371,81 +490,113 @@ class AdminStore {
       mobile_image_url: s.mobile_image_url || s.desktop_image_url || s.media?.public_url || '',
     }));
     this.persist();
+    this.notify();
+
+    if (isSupabaseConfigured && supabase) {
+      await saveHeroSlidesToDb(this.hero);
+    }
+
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new Event('om_hero_updated'));
     }
   }
 
-  // --- TEAM ---
+  // --- TEAM CRUD ---
   getTeam(): TeamMember[] {
     return [...this.team].sort((a, b) => a.display_order - b.display_order);
   }
 
-  saveTeamMember(memberData: Partial<TeamMember> & { name: string; role: string; image_url: string }): TeamMember {
+  async saveTeamMember(memberData: Partial<TeamMember> & { name: string; role: string; image_url: string }): Promise<TeamMember> {
     const idx = this.team.findIndex(m => m.id === memberData.id);
-    if (idx >= 0) {
-      const updated = { ...this.team[idx], ...memberData, updated_at: new Date().toISOString() };
-      this.team[idx] = updated;
-      this.persist();
-      return updated;
+    let resultMember: TeamMember;
+
+    if (idx >= 0 && memberData.id && isUUID(memberData.id)) {
+      if (isSupabaseConfigured && supabase) {
+        const res = await updateTeamMemberRecord(memberData.id, memberData);
+        resultMember = res.data || { ...this.team[idx], ...memberData, updated_at: new Date().toISOString() };
+      } else {
+        resultMember = { ...this.team[idx], ...memberData, updated_at: new Date().toISOString() };
+      }
+      this.team[idx] = resultMember;
     } else {
-      const newMember: TeamMember = {
-        id: `team-${Date.now()}`,
-        name: memberData.name,
-        role: memberData.role,
-        bio: memberData.bio || '',
-        image_url: memberData.image_url,
-        display_order: this.team.length,
-        is_published: memberData.is_published ?? true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      this.team.push(newMember);
-      this.persist();
-      return newMember;
+      if (isSupabaseConfigured && supabase) {
+        const res = await createTeamMemberRecord(memberData);
+        resultMember = res.data || {
+          id: `team-${Date.now()}`,
+          name: memberData.name,
+          role: memberData.role,
+          bio: memberData.bio || '',
+          image_url: memberData.image_url,
+          display_order: this.team.length,
+          is_published: memberData.is_published ?? true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+      } else {
+        resultMember = {
+          id: `team-${Date.now()}`,
+          name: memberData.name,
+          role: memberData.role,
+          bio: memberData.bio || '',
+          image_url: memberData.image_url,
+          display_order: this.team.length,
+          is_published: memberData.is_published ?? true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+      }
+      this.team.push(resultMember);
     }
+
+    this.persist();
+    this.notify();
+    return resultMember;
   }
 
-  deleteTeamMember(id: string): boolean {
+  async deleteTeamMember(id: string): Promise<boolean> {
+    if (isSupabaseConfigured && supabase && isUUID(id)) {
+      await deleteTeamMemberRecord(id);
+    }
     this.team = this.team.filter(m => m.id !== id);
     this.persist();
+    this.notify();
     return true;
   }
 
-  // --- MESSAGES ---
+  // --- MESSAGES CRUD ---
   getMessages(): ContactMessage[] {
     return [...this.messages].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   }
 
-  updateMessageStatus(id: string, status: ContactMessage['status'], notes?: string): boolean {
+  async updateMessageStatus(id: string, status: ContactMessage['status'], notes?: string): Promise<boolean> {
     const msg = this.messages.find(m => m.id === id);
     if (msg) {
       msg.status = status;
       if (notes !== undefined) msg.internal_notes = notes;
       this.persist();
+      this.notify();
 
-      if (isSupabaseConfigured && supabase) {
-        supabase
+      if (isSupabaseConfigured && supabase && isUUID(id)) {
+        await supabase
           .from('contact_messages')
           .update({ status, internal_notes: notes })
-          .eq('id', id)
-          .then();
+          .eq('id', id);
       }
       return true;
     }
     return false;
   }
 
-  deleteMessage(id: string): boolean {
+  async deleteMessage(id: string): Promise<boolean> {
     this.messages = this.messages.filter(m => m.id !== id);
     this.persist();
+    this.notify();
 
-    if (isSupabaseConfigured && supabase) {
-      supabase
+    if (isSupabaseConfigured && supabase && isUUID(id)) {
+      await supabase
         .from('contact_messages')
         .delete()
-        .eq('id', id)
-        .then();
+        .eq('id', id);
     }
     return true;
   }
@@ -455,9 +606,20 @@ class AdminStore {
     return { ...this.content };
   }
 
-  saveContent(newContent: typeof initialCompanyContent) {
+  async saveContent(newContent: typeof initialCompanyContent) {
     this.content = newContent;
     this.persist();
+    this.notify();
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase
+          .from('company_content')
+          .upsert([{ key: 'company_content', value: newContent, updated_at: new Date().toISOString() }]);
+      } catch (e) {
+        console.warn('Could not persist content to company_content table:', e);
+      }
+    }
   }
 }
 

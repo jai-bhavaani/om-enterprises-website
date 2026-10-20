@@ -25,6 +25,14 @@ export const MessagesManager: React.FC = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Subscribe to live adminStore updates
+  React.useEffect(() => {
+    const unsubscribe = adminStore.subscribe(() => {
+      setMessages(adminStore.getMessages());
+    });
+    return unsubscribe;
+  }, []);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
@@ -34,40 +42,40 @@ export const MessagesManager: React.FC = () => {
     setMessages(adminStore.getMessages());
   };
 
-  const handleOpenMessage = (msg: ContactMessage) => {
+  const handleOpenMessage = async (msg: ContactMessage) => {
     setSelectedMessage(msg);
     setInternalNotes(msg.internal_notes || '');
     // Automatically mark 'New' as 'Read' upon inspection
     if (msg.status === 'New') {
-      adminStore.updateMessageStatus(msg.id, 'Read');
+      await adminStore.updateMessageStatus(msg.id, 'Read');
       reloadMessages();
     }
   };
 
-  const handleStatusChange = (status: MessageStatus) => {
+  const handleStatusChange = async (status: MessageStatus) => {
     if (!selectedMessage) return;
-    adminStore.updateMessageStatus(selectedMessage.id, status, internalNotes);
+    await adminStore.updateMessageStatus(selectedMessage.id, status, internalNotes);
     setSelectedMessage({ ...selectedMessage, status, internal_notes: internalNotes });
     reloadMessages();
     showToast(`Marked as ${status}`);
   };
 
-  const handleSaveNotes = () => {
+  const handleSaveNotes = async () => {
     if (!selectedMessage) return;
-    adminStore.updateMessageStatus(selectedMessage.id, selectedMessage.status, internalNotes);
+    await adminStore.updateMessageStatus(selectedMessage.id, selectedMessage.status, internalNotes);
     setSelectedMessage({ ...selectedMessage, internal_notes: internalNotes });
     reloadMessages();
-    showToast('Internal note saved.');
+    showToast('Internal note saved to database.');
   };
 
-  const handleDeleteMessage = (id: string) => {
-    adminStore.deleteMessage(id);
+  const handleDeleteMessage = async (id: string) => {
+    await adminStore.deleteMessage(id);
     reloadMessages();
     if (selectedMessage?.id === id) {
       setSelectedMessage(null);
     }
     setDeleteConfirmId(null);
-    showToast('Inquiry removed.');
+    showToast('Inquiry removed from database.');
   };
 
   const filteredMessages = messages.filter(m => {

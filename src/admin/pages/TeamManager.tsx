@@ -28,6 +28,16 @@ export const TeamManager: React.FC = () => {
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Subscribe to live adminStore updates
+  React.useEffect(() => {
+    const unsubscribe = adminStore.subscribe(() => {
+      setTeam(adminStore.getTeam());
+    });
+    return unsubscribe;
+  }, []);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
@@ -83,29 +93,42 @@ export const TeamManager: React.FC = () => {
     }
   };
 
-  const handleSaveMember = (e: React.FormEvent) => {
+  const handleSaveMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingMember?.name || !editingMember?.role) return;
 
-    adminStore.saveTeamMember(editingMember as any);
-    reloadTeam();
-    handleCloseModal();
-    showToast('Team member profile saved.');
+    setIsSaving(true);
+    try {
+      await adminStore.saveTeamMember(editingMember as any);
+      handleCloseModal();
+      showToast('Team member profile saved to Supabase.');
+    } catch (err: any) {
+      showToast('Failed to save team member: ' + (err.message || 'Error'));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleDeleteMember = (id: string) => {
-    adminStore.deleteTeamMember(id);
-    reloadTeam();
-    setDeleteConfirmId(null);
-    showToast('Team member removed.');
+  const handleDeleteMember = async (id: string) => {
+    try {
+      await adminStore.deleteTeamMember(id);
+      setDeleteConfirmId(null);
+      showToast('Team member removed.');
+    } catch (err: any) {
+      showToast('Failed to delete member: ' + (err.message || 'Error'));
+    }
   };
 
-  const handleTogglePublish = (member: TeamMember) => {
-    adminStore.saveTeamMember({
-      ...member,
-      is_published: !member.is_published,
-    });
-    reloadTeam();
+  const handleTogglePublish = async (member: TeamMember) => {
+    try {
+      await adminStore.saveTeamMember({
+        ...member,
+        is_published: !member.is_published,
+      });
+      showToast(`Member profile ${member.is_published ? 'hidden' : 'published'}.`);
+    } catch (err: any) {
+      showToast('Error updating status');
+    }
   };
 
   return (
@@ -354,9 +377,11 @@ export const TeamManager: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-safety hover:bg-[#e05e00] text-black font-header font-bold text-xs uppercase tracking-wider transition-colors"
+                  disabled={isSaving}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-safety hover:bg-[#e05e00] disabled:opacity-50 text-black font-header font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
                 >
-                  Save Member Profile
+                  {isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{isSaving ? 'Saving...' : 'Save Member Profile'}</span>
                 </button>
               </div>
             </form>

@@ -6,9 +6,26 @@ const features = [
     title: 'Unmatched Expertise',
     description: 'Our team consists of industry veterans with decades of combined experience in high-stakes infrastructure development.',
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0 3.517-1.009 6.79-2.93 9.562C7.039 17.79 6 14.517 6 11c0-3.517 1.009-6.79 2.93-9.562C10.961 4.21 12 7.483 12 11z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0-3.517 1.009-6.79 2.93-9.562C16.961 4.21 18 7.483 18 11c0 3.517-1.009 6.79-2.93 9.562C13.039 17.79 12 14.517 12 11z" />
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 sm:w-9 sm:h-9">
+        {/* Precision Geotechnical Drafting Caliper / Compass */}
+        <path d="M24 7L11 39H17L24 21L31 39H37L24 7Z" fill="currentColor" fillOpacity="0.14" />
+        <path d="M24 7L11 39" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M24 7L37 39" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Caliper Measuring Arc with Metric Calibration Notches */}
+        <path d="M16 27C18.5 25.4 21.2 24.6 24 24.6C26.8 24.6 29.5 25.4 32 27" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <line x1="24" y1="22" x2="24" y2="25" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <line x1="20" y1="23" x2="20.8" y2="26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="28" y1="23" x2="27.2" y2="26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        {/* Geological Strata Horizon Baseline */}
+        <line x1="6" y1="42" x2="42" y2="42" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="12" y1="45" x2="16" y2="45" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="22" y1="45" x2="26" y2="45" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="32" y1="45" x2="36" y2="45" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        {/* Center Precision Joint Pivot */}
+        <circle cx="24" cy="7" r="4.5" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="2.5" />
+        <circle cx="24" cy="7" r="1.5" fill="currentColor" />
+        {/* Geotechnical Leveling Plummet */}
+        <circle cx="24" cy="33" r="2" fill="currentColor" />
       </svg>
     ),
   },
@@ -16,8 +33,18 @@ const features = [
     title: 'Safety & Reliability',
     description: 'We adhere to the strictest safety protocols and are certified with ISO 45001:2018 for occupational health and safety.',
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.955a11.955 11.955 0 0018 0 12.02 12.02 0 00-3.382-8.971z" />
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 sm:w-9 sm:h-9">
+        {/* Heavy Armored Geotechnical Safety Shield */}
+        <path d="M24 4L8 10V22C8 33.2 14.8 41.5 24 44C33.2 41.5 40 33.2 40 22V10L24 4Z" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+        {/* Inner Beveled Armor Truss */}
+        <path d="M24 7V41C31 38.5 36.5 31.8 36.5 22.5V12L24 7Z" fill="currentColor" fillOpacity="0.1" />
+        <path d="M14 14L24 20L34 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Central Bold Verified Checkmark */}
+        <path d="M17 24L22 29L31 19" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Perimeter Structural Rivets */}
+        <circle cx="13" cy="14" r="1.5" fill="currentColor" />
+        <circle cx="35" cy="14" r="1.5" fill="currentColor" />
+        <circle cx="24" cy="38" r="1.5" fill="currentColor" />
       </svg>
     ),
   },
@@ -25,8 +52,29 @@ const features = [
     title: 'Cutting-Edge Technology',
     description: 'We leverage the latest machinery and software to deliver projects with unmatched precision and efficiency.',
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 sm:w-9 sm:h-9">
+        {/* Excavator Hydraulic Boom & Rock Breaker Assembly */}
+        <path d="M6 34H16L14 40H4L6 34Z" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <circle cx="11" cy="37" r="1.5" fill="currentColor" />
+        {/* Main Boom Arm */}
+        <path d="M12 34L20 14L28 18L18 36L12 34Z" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+        {/* Dipper Stick */}
+        <path d="M26 16L38 24L35 28L24 19L26 16Z" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+        {/* Hydraulic Pistons */}
+        <line x1="16" y1="28" x2="23" y2="20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <line x1="24" y1="14" x2="33" y2="21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        {/* Hydraulic Rock Breaker Chisel */}
+        <path d="M37 25L42 34L39 36L34 27L37 25Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M42 34L45 41L42 41L39 36" fill="currentColor" />
+        {/* Digital Laser Telemetry Sensor Grid */}
+        <circle cx="36" cy="11" r="6" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2" />
+        <line x1="36" y1="3" x2="36" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="36" y1="15" x2="36" y2="19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="28" y1="11" x2="32" y2="11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="40" y1="11" x2="44" y2="11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <circle cx="36" cy="11" r="1.5" fill="currentColor" />
+        {/* Basalt Rock Fracture Waves */}
+        <path d="M35 43L39 40L43 43" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -34,8 +82,29 @@ const features = [
     title: 'Proven Track Record',
     description: 'Our portfolio of successfully completed projects for India’s leading developers speaks for itself.',
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 sm:w-9 sm:h-9">
+        {/* Rising Skyscraper Tower (Superstructure Above Grade) */}
+        <path d="M18 18V6H30V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <line x1="22" y1="10" x2="26" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="22" y1="14" x2="26" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        {/* Datum 0.00m Ground Line */}
+        <line x1="4" y1="18" x2="44" y2="18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        {/* Multi-Tier Substructure Retaining Pit (Basement B1-B4) */}
+        <path d="M12 18V42H36V18" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+        {/* Intermediate Slabs */}
+        <line x1="12" y1="26" x2="36" y2="26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="12" y1="34" x2="36" y2="34" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        {/* Piling Foundations */}
+        <line x1="16" y1="42" x2="16" y2="46" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <line x1="24" y1="42" x2="24" y2="46" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <line x1="32" y1="42" x2="32" y2="46" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        {/* Prestressed Rock Anchor Tiebacks Socketed into Bedrock */}
+        <line x1="12" y1="24" x2="5" y2="29" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <line x1="12" y1="32" x2="5" y2="37" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <line x1="36" y1="24" x2="43" y2="29" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <line x1="36" y1="32" x2="43" y2="37" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        {/* Milestone Achievement Delivery Star Badge */}
+        <path d="M37 5L38.5 8.5L42 9L39.5 11.5L40 15L37 13.2L34 15L34.5 11.5L32 9L35.5 8.5L37 5Z" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -43,15 +112,23 @@ const features = [
 
 export const WhyChooseUs: React.FC = () => {
   return (
-    <section id="why-choose-us" className="py-20 px-4 bg-background border-t border-border-subtle">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="font-header text-4xl uppercase font-bold text-text-primary mb-4">Why Choose Us</h2>
-          <p className="font-body text-text-secondary max-w-2xl mx-auto">
+    <section id="why-choose-us" className="py-20 px-4 bg-background border-t border-border-subtle relative overflow-hidden">
+      {/* Subtle Blueprint Grid Accent */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-safety/10 border border-safety/30 text-safety text-xs font-mono font-bold uppercase tracking-wider mb-3">
+            <span>Engineering Distinction & Competitive Edge</span>
+          </div>
+          <h2 className="font-header text-4xl sm:text-5xl uppercase font-bold text-text-primary tracking-tight">
+            Why Choose Us
+          </h2>
+          <p className="font-body text-text-secondary text-sm sm:text-base max-w-2xl mx-auto mt-3 leading-relaxed">
             We are committed to delivering excellence in every project, ensuring our clients receive the best possible service and results.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {features.map((feature, index) => (
             <FeatureCard
               key={index}

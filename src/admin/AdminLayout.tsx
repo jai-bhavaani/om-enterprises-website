@@ -18,6 +18,7 @@ import {
 import { useAdmin } from './AdminContext';
 import { adminStore } from './adminStore';
 import { useTheme } from '../context/ThemeContext';
+import logoSrc from '@/assets/images/logo.png';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -53,15 +54,17 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <header className="sticky top-0 z-40 bg-surface/95 backdrop-blur-md border-b border-border-subtle px-4 py-3 shadow-xs">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link to="/admin/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded bg-safety flex items-center justify-center font-header font-bold text-[var(--color-safety-text)] text-lg">
-                OM
-              </div>
+            <Link to="/admin/dashboard" className="flex items-center gap-2.5 sm:gap-3 group">
+              <img
+                src={logoSrc}
+                alt="OM Enterprises Official Logo"
+                className="h-8 sm:h-9 w-auto max-w-[130px] object-contain rounded-md transition-transform group-hover:scale-105"
+              />
               <div className="leading-tight">
-                <span className="font-header font-bold text-text-primary text-base tracking-wider uppercase block">
-                  OM CMS
+                <span className="font-header font-bold text-text-primary text-base sm:text-lg tracking-wider uppercase block group-hover:text-safety transition-colors">
+                  OM ADMIN
                 </span>
-                <span className="text-[10px] text-text-secondary block uppercase tracking-widest font-mono">
+                <span className="text-[9px] sm:text-[10px] text-text-secondary block uppercase tracking-widest font-mono">
                   Edilite Construction
                 </span>
               </div>
@@ -73,7 +76,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               </span>
             ) : (
               <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-500/10 text-emerald-500 border border-emerald-500/30">
-                <ShieldCheck className="w-3 h-3" /> Live Supabase
+                <ShieldCheck className="w-3 h-3" /> Live Database
               </span>
             )}
           </div>

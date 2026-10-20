@@ -9,23 +9,40 @@ import {
   MapPin, 
   Clock, 
   Award,
-  Database
+  Database,
+  Loader2
 } from 'lucide-react';
 import { adminStore } from '../adminStore';
 
 export const ContentManager: React.FC = () => {
   const [content, setContent] = useState(() => adminStore.getContent());
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Subscribe to live adminStore updates
+  React.useEffect(() => {
+    const unsubscribe = adminStore.subscribe(() => {
+      setContent(adminStore.getContent());
+    });
+    return unsubscribe;
+  }, []);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    adminStore.saveContent(content);
-    showToast('Company information and statistics updated.');
+    setIsSaving(true);
+    try {
+      await adminStore.saveContent(content);
+      showToast('Company information and statistics updated in Supabase.');
+    } catch (err: any) {
+      showToast('Failed to save company content: ' + (err.message || 'Error'));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleExportBackup = () => {
@@ -262,10 +279,11 @@ export const ContentManager: React.FC = () => {
         <div className="flex justify-end pt-2">
           <button
             type="submit"
-            className="flex items-center gap-2 px-6 py-3 rounded-lg bg-safety hover:bg-[#e05e00] text-black font-header font-bold text-xs uppercase tracking-wider shadow-lg shadow-safety/20 transition-colors"
+            disabled={isSaving}
+            className="flex items-center gap-2 px-6 py-3 rounded-lg bg-safety hover:bg-[#e05e00] disabled:opacity-50 text-black font-header font-bold text-xs uppercase tracking-wider shadow-lg shadow-safety/20 transition-colors cursor-pointer"
           >
-            <Save className="w-4 h-4" />
-            <span>Save Global Information</span>
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            <span>{isSaving ? 'Saving to Database...' : 'Save Global Information'}</span>
           </button>
         </div>
       </form>

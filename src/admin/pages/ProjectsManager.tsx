@@ -15,7 +15,9 @@ import {
   Eye,
   SlidersHorizontal,
   Loader2,
-  FolderOpen
+  FolderOpen,
+  ArrowLeft,
+  ArrowRight
 } from 'lucide-react';
 import { adminStore } from '../adminStore';
 import { uploadMultipleFiles } from '../../lib/storage';
@@ -36,6 +38,8 @@ export const ProjectsManager: React.FC = () => {
   // Device file upload & media library picker state
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
   const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
+  const [mediaPickerSearch, setMediaPickerSearch] = useState('');
+  const [previewLightboxUrl, setPreviewLightboxUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Check query params to auto-open editor if navigated with ?action=new or ?edit=:id
@@ -54,6 +58,14 @@ export const ProjectsManager: React.FC = () => {
       setSearchParams({});
     }
   }, [searchParams]);
+
+  // Reactive subscription to AdminStore updates from Supabase
+  useEffect(() => {
+    const unsubscribe = adminStore.subscribe(() => {
+      setProjects(adminStore.getProjects());
+    });
+    return unsubscribe;
+  }, []);
 
   const showToast = (msg: string) => {
     setFeedbackToast(msg);
@@ -102,21 +114,21 @@ export const ProjectsManager: React.FC = () => {
     setIsMediaPickerOpen(false);
   };
 
-  const handleSaveProject = (e: React.FormEvent) => {
+  const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProject?.title) return;
 
-    adminStore.saveProject(editingProject as any);
+    await adminStore.saveProject(editingProject as any);
     reloadProjects();
     handleCloseEditor();
-    showToast('Project details saved successfully.');
+    showToast('Project details saved to database.');
   };
 
-  const handleDeleteProject = (id: string) => {
-    adminStore.deleteProject(id);
+  const handleDeleteProject = async (id: string) => {
+    await adminStore.deleteProject(id);
     reloadProjects();
     setDeleteConfirmId(null);
-    showToast('Project deleted.');
+    showToast('Project deleted from database.');
   };
 
   // Device file picker upload handler
@@ -319,7 +331,8 @@ export const ProjectsManager: React.FC = () => {
                   <img
                     src={coverImg}
                     alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-slate-600 font-mono text-xs">
@@ -327,10 +340,11 @@ export const ProjectsManager: React.FC = () => {
                   </div>
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-black/60"></div>
+                {/* Subtle top vignette for badge contrast without obscuring the photograph */}
+                <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-black/50 via-black/15 to-transparent pointer-events-none"></div>
 
                 {/* Top badges */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
                   <span
                     className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase shadow-sm ${
                       project.status === 'Completed'
@@ -345,20 +359,20 @@ export const ProjectsManager: React.FC = () => {
 
                   <div className="flex items-center gap-1">
                     {!project.is_published && (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300 border border-slate-700">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/90 text-slate-200 border border-white/20 shadow-xs">
                         Draft
                       </span>
                     )}
                     {project.is_featured && (
-                      <span className="p-1 rounded bg-safety text-black" title="Spotlight Featured">
+                      <span className="p-1 rounded bg-safety text-black shadow-xs" title="Spotlight Featured">
                         <Star className="w-3 h-3 fill-black" />
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* Bottom Photo Count */}
-                <div className="absolute bottom-2 left-3 flex items-center gap-1 text-[11px] font-mono text-concrete-light">
+                {/* Bottom Photo Count Badge */}
+                <div className="absolute bottom-2.5 left-3 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-black/65 backdrop-blur-xs text-[11px] font-mono text-white border border-white/15 shadow-sm pointer-events-none">
                   <ImageIcon className="w-3.5 h-3.5 text-safety" />
                   <span>{project.images?.length || 0} Photos</span>
                 </div>
@@ -818,42 +832,47 @@ export const ProjectsManager: React.FC = () => {
                       )}
 
                       {/* Overlay Controls */}
-                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 p-1">
+                      <div className="absolute inset-0 bg-black/75 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 p-1.5 z-10">
                         <button
                           type="button"
                           onClick={() => handleSetCover(idx)}
-                          className={`p-1 rounded ${img.is_cover ? 'text-safety' : 'text-white hover:text-safety'}`}
-                          title="Set as Cover Image"
+                          className={`p-1.5 rounded-md border transition-all cursor-pointer shadow-md flex items-center justify-center ${
+                            img.is_cover 
+                              ? 'bg-safety text-black border-safety shadow-safety/30 scale-105' 
+                              : 'bg-slate-900/90 text-white hover:text-safety hover:bg-black hover:border-safety/70 border-white/25'
+                          }`}
+                          title={img.is_cover ? 'Current Cover Image' : 'Set as Cover Image'}
                         >
-                          <Star className="w-4 h-4" />
+                          <Star className={`w-4 h-4 ${img.is_cover ? 'fill-black stroke-black' : 'stroke-current'}`} strokeWidth={2.2} />
                         </button>
 
                         <button
                           type="button"
                           disabled={idx === 0}
                           onClick={() => handleMoveImage(idx, 'up')}
-                          className="p-1 rounded text-white hover:text-safety disabled:opacity-30"
+                          className="p-1.5 rounded-md bg-slate-900/90 hover:bg-black text-white hover:text-safety border border-white/25 hover:border-safety/70 disabled:opacity-20 disabled:hover:text-white disabled:hover:bg-slate-900/90 disabled:hover:border-white/25 disabled:cursor-not-allowed transition-all cursor-pointer shadow-md flex items-center justify-center"
                           title="Move Left"
                         >
-                          &larr;
+                          <ArrowLeft className="w-4 h-4" strokeWidth={2.5} />
                         </button>
+
                         <button
                           type="button"
                           disabled={idx === (editingProject.images?.length || 0) - 1}
                           onClick={() => handleMoveImage(idx, 'down')}
-                          className="p-1 rounded text-white hover:text-safety disabled:opacity-30"
+                          className="p-1.5 rounded-md bg-slate-900/90 hover:bg-black text-white hover:text-safety border border-white/25 hover:border-safety/70 disabled:opacity-20 disabled:hover:text-white disabled:hover:bg-slate-900/90 disabled:hover:border-white/25 disabled:cursor-not-allowed transition-all cursor-pointer shadow-md flex items-center justify-center"
                           title="Move Right"
                         >
-                          &rarr;
+                          <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
                         </button>
 
                         <button
                           type="button"
                           onClick={() => handleRemoveImage(idx)}
-                          className="p-1 rounded text-red-400 hover:text-red-300"
+                          className="p-1.5 rounded-md bg-red-950/90 hover:bg-red-900 text-red-400 hover:text-red-100 border border-red-700/70 shadow-md transition-all cursor-pointer flex items-center justify-center"
                           title="Remove image"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4" strokeWidth={2.2} />
                         </button>
                       </div>
                     </div>
@@ -917,53 +936,146 @@ export const ProjectsManager: React.FC = () => {
       {/* ========================================================================= */}
       {/* MEDIA LIBRARY PICKER MODAL                                                */}
       {/* ========================================================================= */}
-      {isMediaPickerOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-surface border border-border-subtle rounded-2xl max-w-3xl w-full p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-border-subtle pb-3">
-              <h3 className="font-header text-lg font-bold uppercase text-text-primary tracking-wide flex items-center gap-2">
-                <FolderOpen className="w-5 h-5 text-safety" />
-                <span>Select Photo from Central Media Library</span>
-              </h3>
-              <button
-                type="button"
-                onClick={() => setIsMediaPickerOpen(false)}
-                className="p-1 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-subtle"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+      {isMediaPickerOpen && (() => {
+        const allMedia = adminStore.getMedia();
+        const filteredMedia = allMedia.filter(m => 
+          m.filename.toLowerCase().includes(mediaPickerSearch.toLowerCase()) ||
+          (m.alt_text || '').toLowerCase().includes(mediaPickerSearch.toLowerCase())
+        );
 
-            <p className="text-xs text-text-secondary">
-              Click any photo to attach it to this project gallery.
-            </p>
-
-            <div className="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-4 gap-3 p-1">
-              {adminStore.getMedia().map((m) => (
-                <div
-                  key={m.id}
-                  onClick={() => handleSelectFromMedia(m)}
-                  className="group relative aspect-video rounded-lg overflow-hidden border border-border-subtle hover:border-safety cursor-pointer bg-slate-900 transition-all shadow-sm"
-                >
-                  <img src={m.public_url} alt={m.filename} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                    <span className="px-2 py-1 bg-safety text-black text-[10px] font-bold rounded">
-                      Choose
-                    </span>
-                  </div>
+        return (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+            <div className="bg-surface border border-border-subtle rounded-2xl max-w-5xl w-full p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between border-b border-border-subtle pb-3">
+                <div>
+                  <h3 className="font-header text-lg sm:text-xl font-bold uppercase text-text-primary tracking-wide flex items-center gap-2">
+                    <FolderOpen className="w-5 h-5 text-safety" />
+                    <span>Select Photo from Central Media Library</span>
+                  </h3>
+                  <p className="text-xs text-text-secondary mt-0.5">
+                    Hover over any thumbnail to preview details. Click to attach to project gallery.
+                  </p>
                 </div>
-              ))}
-            </div>
+                <button
+                  type="button"
+                  onClick={() => setIsMediaPickerOpen(false)}
+                  className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-subtle transition-colors cursor-pointer"
+                  title="Close Modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-            <div className="pt-2 flex justify-end border-t border-border-subtle">
-              <button
-                type="button"
-                onClick={() => setIsMediaPickerOpen(false)}
-                className="px-4 py-2 rounded-lg bg-surface-subtle hover:bg-border-subtle text-text-primary text-xs font-mono"
-              >
-                Close
-              </button>
+              {/* Search Filter Bar */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-surface-subtle/60 p-2.5 rounded-xl border border-border-subtle">
+                <div className="relative flex-1 w-full">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
+                  <input
+                    type="text"
+                    value={mediaPickerSearch}
+                    onChange={(e) => setMediaPickerSearch(e.target.value)}
+                    placeholder="Filter by filename or keyword (e.g. Mulund, Piling, Excavator, Rock)..."
+                    className="w-full bg-surface border border-border-subtle rounded-lg pl-9 pr-4 py-2 text-xs text-text-primary focus:outline-none focus:border-safety font-mono"
+                  />
+                </div>
+                <span className="text-[11px] font-mono text-text-secondary whitespace-nowrap px-2">
+                  Showing <strong className="text-text-primary">{filteredMedia.length}</strong> of {allMedia.length} assets
+                </span>
+              </div>
+
+              {/* Non-collapsing Grid with Hover Expansion */}
+              <div className="flex-1 overflow-y-auto min-h-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-3 scrollbar-thin">
+                {filteredMedia.length === 0 ? (
+                  <div className="col-span-full py-12 text-center text-text-secondary font-mono text-xs">
+                    No images match "{mediaPickerSearch}". Try a different search term.
+                  </div>
+                ) : (
+                  filteredMedia.map((m) => (
+                    <div
+                      key={m.id}
+                      className="group relative h-28 sm:h-32 rounded-xl overflow-visible cursor-pointer bg-slate-900 border border-border-subtle hover:border-safety transition-all shadow-sm"
+                    >
+                      {/* Floating expanded card on hover */}
+                      <div
+                        onClick={() => handleSelectFromMedia(m)}
+                        className="w-full h-full rounded-xl overflow-hidden relative group-hover:scale-125 sm:group-hover:scale-135 group-hover:z-30 group-hover:shadow-2xl group-hover:ring-2 group-hover:ring-safety transition-all duration-200 ease-out origin-center bg-slate-900"
+                      >
+                        <img
+                          src={m.public_url}
+                          alt={m.filename}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-300"
+                        />
+
+                        {/* Gradient Overlay with filename and action pills */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                          <div className="flex justify-end">
+                            <span className="px-1.5 py-0.5 bg-black/80 backdrop-blur-xs text-[9px] font-mono text-slate-300 rounded border border-white/10 truncate max-w-[140px]" title={m.filename}>
+                              {m.filename}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="px-2 py-1 bg-safety text-black text-[10px] font-header font-bold uppercase rounded shadow-sm">
+                              Select Photo
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPreviewLightboxUrl(m.public_url);
+                              }}
+                              className="p-1 rounded bg-black/80 hover:bg-black text-white hover:text-safety border border-white/20 transition-colors shadow-sm cursor-pointer"
+                              title="Full Screen Preview"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="pt-2 flex justify-between items-center border-t border-border-subtle">
+                <span className="text-[11px] text-text-secondary font-mono hidden sm:inline">
+                  Tip: Click the Eye icon to view in full resolution before choosing.
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsMediaPickerOpen(false)}
+                  className="px-4 py-2 rounded-lg bg-surface-subtle hover:bg-border-subtle text-text-primary text-xs font-mono transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
             </div>
+          </div>
+        );
+      })()}
+
+      {/* FULLSCREEN PREVIEW LIGHTBOX */}
+      {previewLightboxUrl && (
+        <div
+          onClick={() => setPreviewLightboxUrl(null)}
+          className="fixed inset-0 z-70 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-150"
+        >
+          <div className="relative max-w-5xl max-h-[90vh] flex flex-col items-center">
+            <img
+              src={previewLightboxUrl}
+              alt="High Resolution Preview"
+              className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl border border-white/10"
+            />
+            <button
+              type="button"
+              onClick={() => setPreviewLightboxUrl(null)}
+              className="absolute -top-3 -right-3 sm:top-3 sm:right-3 p-2 rounded-full bg-black/80 hover:bg-black text-white hover:text-safety border border-white/20 transition-all cursor-pointer shadow-xl"
+              title="Close Preview"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <p className="text-xs font-mono text-slate-400 mt-2">Click anywhere or close icon to exit preview</p>
           </div>
         </div>
       )}

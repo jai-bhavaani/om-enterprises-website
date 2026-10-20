@@ -26,9 +26,11 @@ import { MachinerySection } from './components/MachinerySection';
 import { AdminRoutes } from './src/admin/AdminRoutes';
 import { ThemeProvider } from './src/context/ThemeContext';
 import { useHeroSlides, useProjects } from './src/hooks/useCMS';
+import { Award, Users, ShieldCheck } from 'lucide-react';
+import teamLegacyLocal from '@/assets/images/om_team_legacy.jpg';
 
-// Ashirwad Bunglow flagship preview served from Supabase Storage CDN
-const ashirwadProjectImg = 'https://cuorugoykxvkldyztiin.supabase.co/storage/v1/object/public/media/projects/Ashirwad_Bunglow/IMG-20160625-WA0010.jpg';
+// OM Enterprises & Edilite Construction Team & Leadership - A Legacy of Strength
+const omTeamLegacyImg = 'https://cuorugoykxvkldyztiin.supabase.co/storage/v1/object/public/media/team/om_team_legacy.jpg';
 
 
 
@@ -229,17 +231,44 @@ const HomeContent: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right Side: Visual Storytelling Image */}
+              {/* Right Side: Visual Storytelling Team Legacy Image */}
               <div className="lg:w-7/12 w-full">
-                <figure>
-                  <div className="h-96 lg:h-[500px] bg-background border-2 border-border-subtle relative shadow-lg">
+                <figure className="relative">
+                  <div className="w-full aspect-[4/3] sm:aspect-[16/11] lg:h-[500px] rounded-2xl overflow-hidden bg-background border-2 border-border-subtle shadow-2xl relative group">
                     <img
-                      src={ashirwadProjectImg}
-                      alt="Ashirwad Bunglow Project Image"
-                      className="w-full h-full object-cover"
+                      src={omTeamLegacyImg}
+                      onError={(e) => {
+                        // Fallback to bundled local asset if offline
+                        (e.target as HTMLImageElement).src = teamLegacyLocal;
+                      }}
+                      alt="OM Enterprises and Edilite Construction Leadership & Field Engineering Team"
+                      className="w-full h-full object-cover object-top sm:object-center group-hover:scale-102 transition-transform duration-700"
                     />
-                    <div className="absolute top-4 left-4 bg-safety text-[var(--color-safety-text)] font-body text-xs uppercase tracking-widest px-3 py-1 font-semibold">
-                      EST. 2004
+
+                    {/* Established Badge */}
+                    <div className="absolute top-4 left-4 bg-safety text-[var(--color-safety-text)] font-header text-xs uppercase tracking-wider px-3.5 py-1.5 font-bold rounded-lg shadow-lg flex items-center gap-1.5">
+                      <Award className="w-3.5 h-3.5" />
+                      <span>EST. 2004 • 20+ Years Legacy</span>
+                    </div>
+
+                    {/* Bottom Caption Pill Strip */}
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 sm:p-5 flex flex-col sm:flex-row sm:items-end justify-between gap-2 text-white">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Users className="w-4 h-4 text-safety" />
+                          <span className="font-header text-sm sm:text-base font-bold uppercase tracking-wide">
+                            OM Enterprises & Edilite Construction Family
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-300 font-body mt-0.5">
+                          Proprietor, Project Incharges, Site Engineers & Geotechnical Supervisors
+                        </p>
+                      </div>
+
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-mono text-safety font-bold whitespace-nowrap">
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>200+ Core Workforce</span>
+                      </div>
                     </div>
                   </div>
                 </figure>
@@ -364,9 +393,9 @@ const HomeContent: React.FC = () => {
               <span className="text-[10px] text-text-muted">IS 2911 &bull; IS 10270 &bull; BS 8081 Compliant</span>
               <Link
                 to="/admin/login"
-                className="text-[11px] text-text-muted hover:text-safety transition-colors uppercase tracking-wider"
+                className="text-[11px] text-text-muted hover:text-safety transition-colors uppercase tracking-wider font-bold"
               >
-                CMS Portal &rarr;
+                OM Admin &rarr;
               </Link>
             </div>
           </div>
