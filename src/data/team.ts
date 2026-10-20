@@ -1,10 +1,12 @@
-import ashokImg from '../assets/team_images/ashok.jpg';
-import lokeshImg from '../assets/team_images/lokesh.jpg';
-import jeetuImg from '../assets/team_images/jeetu.jpg';
-import adalatImg from '../assets/team_images/adalat.jpg';
-import pravinImg from '../assets/team_images/pravin.jpg';
-import surendraImg from '../assets/team_images/surendra.jpg';
-import abhinashImg from '../assets/team_images/abhinash.jpg';
+// Team portraits hosted on Supabase Storage CDN
+const CDN_TEAM_BASE = 'https://cuorugoykxvkldyztiin.supabase.co/storage/v1/object/public/media/team';
+const ashokImg = `${CDN_TEAM_BASE}/ashok.jpg`;
+const lokeshImg = `${CDN_TEAM_BASE}/lokesh.jpg`;
+const jeetuImg = `${CDN_TEAM_BASE}/jeetu.jpg`;
+const adalatImg = `${CDN_TEAM_BASE}/adalat.jpg`;
+const pravinImg = `${CDN_TEAM_BASE}/pravin.jpg`;
+const surendraImg = `${CDN_TEAM_BASE}/surendra.jpg`;
+const abhinashImg = `${CDN_TEAM_BASE}/abhinash.jpg`;
 
 export type Leader = {
   name: string;

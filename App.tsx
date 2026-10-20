@@ -27,7 +27,8 @@ import { AdminRoutes } from './src/admin/AdminRoutes';
 import { ThemeProvider } from './src/context/ThemeContext';
 import { useHeroSlides, useProjects } from './src/hooks/useCMS';
 
-import AshirwadBunglowImage2 from './src/assets/projects/Ashirwad Bunglow/IMG-20160625-WA0010.jpg'; // Import Ashirwad Bunglow Image 2
+// Ashirwad Bunglow flagship preview served from Supabase Storage CDN
+const ashirwadProjectImg = 'https://cuorugoykxvkldyztiin.supabase.co/storage/v1/object/public/media/projects/Ashirwad_Bunglow/IMG-20160625-WA0010.jpg';
 
 
 
@@ -233,7 +234,7 @@ const HomeContent: React.FC = () => {
                 <figure>
                   <div className="h-96 lg:h-[500px] bg-background border-2 border-border-subtle relative shadow-lg">
                     <img
-                      src={AshirwadBunglowImage2}
+                      src={ashirwadProjectImg}
                       alt="Ashirwad Bunglow Project Image"
                       className="w-full h-full object-cover"
                     />

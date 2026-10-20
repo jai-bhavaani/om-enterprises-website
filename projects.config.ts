@@ -1,26 +1,137 @@
 
-// Get all images from the projects folder
-const projectImages = import.meta.glob('./src/assets/projects/**/*.{png,jpg,jpeg,JPG,JPEG,webp}', { eager: true, import: 'default' });
+// Supabase Storage Public CDN Base URL for project photography
+const CDN_BASE = 'https://cuorugoykxvkldyztiin.supabase.co/storage/v1/object/public/media/projects';
 
-const projectsMap: Record<string, string[]> = {};
+const projectsMap: Record<string, string[]> = {
+  "Ariisto Mulund": [],
+  "Aristo Glory": [
+    `${CDN_BASE}/Aristo_Glory/aristo_glory271.JPG`,
+    `${CDN_BASE}/Aristo_Glory/glory243.JPG`,
+    `${CDN_BASE}/Aristo_Glory/glory252.JPG`
+  ],
+  "Arristo Goregaon": [
+    `${CDN_BASE}/Arristo_Goregaon/Images_20.jpg`,
+    `${CDN_BASE}/Arristo_Goregaon/IMG-20160213-WA0014.jpg`
+  ],
+  "Ashirwad Bunglow": [
+    `${CDN_BASE}/Ashirwad_Bunglow/IMG-20160625-WA0010.jpg`,
+    `${CDN_BASE}/Ashirwad_Bunglow/IMG-20170117-WA0009.jpg`,
+    `${CDN_BASE}/Ashirwad_Bunglow/IMG-20170117-WA0010.jpg`,
+    `${CDN_BASE}/Ashirwad_Bunglow/IMG-20170117-WA0020.jpg`,
+    `${CDN_BASE}/Ashirwad_Bunglow/IMG-20170117-WA0023.jpg`,
+    `${CDN_BASE}/Ashirwad_Bunglow/IMG_20161017_111059_HDR.jpg`
+  ],
+  "Aurum Venturs": [
+    `${CDN_BASE}/Aurum_Venturs/IMG-20160422-WA0015.jpg`
+  ],
+  "B E Billimoria Andheri": [
+    `${CDN_BASE}/B_E_Billimoria_Andheri/WhatsApp_Image_2021-08-30_at_14.43.28.jpeg`,
+    `${CDN_BASE}/B_E_Billimoria_Andheri/WhatsApp_Image_2021-08-30_at_14.43.29_(1).jpeg`,
+    `${CDN_BASE}/B_E_Billimoria_Andheri/WhatsApp_Image_2021-08-30_at_14.43.31_(2).jpeg`
+  ],
+  "B E Billimoria Raptacos Thane": [
+    `${CDN_BASE}/B_E_Billimoria_Raptacos_Thane/IMG_20161224_160208_HDR.jpg`,
+    `${CDN_BASE}/B_E_Billimoria_Raptacos_Thane/IMG_20161224_160224_HDR.jpg`
+  ],
+  "Breach Candy Hospital": [],
+  "Breaking": [
+    `${CDN_BASE}/Breaking/Crusher_Slab_-2.JPG`,
+    `${CDN_BASE}/Breaking/Crusher_Tank_Wall_1.JPG`,
+    `${CDN_BASE}/Breaking/Crusher_Tank_Wall_2.jpg`
+  ],
+  "Chembur Demoliotion": [
+    `${CDN_BASE}/Chembur_Demoliotion/IMG-20151127-WA0003.jpg`,
+    `${CDN_BASE}/Chembur_Demoliotion/IMG-20151209-WA0015.jpg`,
+    `${CDN_BASE}/Chembur_Demoliotion/IMG-20151209-WA0019.jpg`
+  ],
+  "Chistiya height Null bazar": [],
+  "Fem Jaycee Home Ghatkoper": [],
+  "HCC Jammu": [
+    `${CDN_BASE}/HCC_Jammu/WhatsApp_Image_2021-09-01_at_19.49.54.jpeg`,
+    `${CDN_BASE}/HCC_Jammu/WhatsApp_Image_2021-09-01_at_19.50.46.jpeg`,
+    `${CDN_BASE}/HCC_Jammu/WhatsApp_Image_2022-12-26_at_11.33.43.jpeg`,
+    `${CDN_BASE}/HCC_Jammu/WhatsApp_Image_2022-12-26_at_11.33.44.jpeg`
+  ],
+  "Kasturi Chirabazar": [
+    `${CDN_BASE}/Kasturi_Chirabazar/WhatsApp_Image_2025-07-22_at_4.02.02_PM_(1).jpeg`,
+    `${CDN_BASE}/Kasturi_Chirabazar/WhatsApp_Image_2025-07-22_at_4.02.02_PM_(3).jpeg`,
+    `${CDN_BASE}/Kasturi_Chirabazar/WhatsApp_Image_2025-12-11_at_17.22.03.jpeg`,
+    `${CDN_BASE}/Kasturi_Chirabazar/WhatsApp_Image_2025-12-11_at_17.22.05.jpeg`
+  ],
+  "L & T Forest Hill": [
+    `${CDN_BASE}/L_&_T_Forest_Hill/WhatsApp_Image_2025-03-07_at_5.52.47_PM.jpeg`,
+    `${CDN_BASE}/L_&_T_Forest_Hill/WhatsApp_Image_2025-03-12_at_9.09.40_AM.jpeg`
+  ],
+  "Lulu Walkeshwar": [
+    `${CDN_BASE}/Lulu_Walkeshwar/LULU_WALKESHWAR_15.JPG`,
+    `${CDN_BASE}/Lulu_Walkeshwar/LULU_WALKESHWAR_19.JPG`,
+    `${CDN_BASE}/Lulu_Walkeshwar/LULU_WALKESHWAR11.JPG`
+  ],
+  "Mahindra Kandivali": [
+    `${CDN_BASE}/Mahindra_Kandivali/mahindra_kandivali_12.JPG`,
+    `${CDN_BASE}/Mahindra_Kandivali/mahindra_kandivali_14.JPG`,
+    `${CDN_BASE}/Mahindra_Kandivali/mahindra_kandivali_7.JPG`
+  ],
+  "Photo": [],
+  "Piling": [],
+  "Piramal": [
+    `${CDN_BASE}/Piramal/Piramal_Gulita_(3).JPG`,
+    `${CDN_BASE}/Piramal/Piramal_Gulita_(4).JPG`,
+    `${CDN_BASE}/Piramal/Piramal_Gulita_(6).JPG`
+  ],
+  "Piramal Agastya": [
+    `${CDN_BASE}/Piramal_Agastya/IMG_20190618_191957.jpg`
+  ],
+  "Piramal Pathway Images": [],
+  "Piramal Vaikunth": [],
+  "Piraml Revanta Mulund": [
+    `${CDN_BASE}/Piraml_Revanta_Mulund/IMG-20161223-WA0009.jpg`,
+    `${CDN_BASE}/Piraml_Revanta_Mulund/IMG-20170112-WA0002.jpg`,
+    `${CDN_BASE}/Piraml_Revanta_Mulund/IMG-20170112-WA0003.jpg`,
+    `${CDN_BASE}/Piraml_Revanta_Mulund/IMG-20170115-WA0005.jpg`
+  ],
+  "Prestige mulund": [
+    `${CDN_BASE}/Prestige_mulund/WhatsApp_Image_2021-12-06_at_10.34.01.jpeg`,
+    `${CDN_BASE}/Prestige_mulund/WhatsApp_Image_2022-12-26_at_11.21.33.jpeg`,
+    `${CDN_BASE}/Prestige_mulund/WhatsApp_Image_2023-02-14_at_18.00.32.jpeg`,
+    `${CDN_BASE}/Prestige_mulund/WhatsApp_Image_2023-02-17_at_09.17.47.jpeg`,
+    `${CDN_BASE}/Prestige_mulund/WhatsApp_Image_2025-12-11_at_15.11.39.jpeg`,
+    `${CDN_BASE}/Prestige_mulund/WhatsApp_Image_2025-12-11_at_15.30.32.jpeg`
+  ],
+  "Raymond Bandra Site": [
+    `${CDN_BASE}/Raymond_Bandra_Site/WhatsApp_Image_2024-11-26_at_11.39.32_AM.JPG`,
+    `${CDN_BASE}/Raymond_Bandra_Site/WhatsApp_Image_2025-09-27_at_10.05.13_AM.jpeg`,
+    `${CDN_BASE}/Raymond_Bandra_Site/WhatsApp_Image_2025-09-27_at_10.05.14_AM_(2).jpeg`
+  ],
+  "RNA BAM Market Photos": [
+    `${CDN_BASE}/RNA_BAM_Market_Photos/DSC_0460.jpg`,
+    `${CDN_BASE}/RNA_BAM_Market_Photos/IMG-20160308-WA0012.jpg`,
+    `${CDN_BASE}/RNA_BAM_Market_Photos/IMG-20160308-WA0016.jpg`
+  ],
+  "RNA Metroppolis": [],
+  "Shanti Housing": [
+    `${CDN_BASE}/Shanti_Housing/shantihousing263.JPG`
+  ],
+  "Tractor Piling": [],
+  "VJTF Borivali": [
+    `${CDN_BASE}/VJTF_Borivali/IMG-20160618-WA0001.jpg`,
+    `${CDN_BASE}/VJTF_Borivali/IMG-20160708-WA0006.jpg`
+  ],
+  "Welspun": [
+    `${CDN_BASE}/Welspun/WhatsApp_Image_2023-12-23_at_14.57.33.jpeg`,
+    `${CDN_BASE}/Welspun/WhatsApp_Image_2024-01-02_at_09.16.19.jpeg`,
+    `${CDN_BASE}/Welspun/WhatsApp_Image_2024-05-17_at_9.51.24_AM.jpeg`,
+    `${CDN_BASE}/Welspun/WhatsApp_Image_2024-05-21_at_8.58.14_AM.jpeg`
+  ],
+  "Welspun One ( JNPA SEZ Site )": [
+    `${CDN_BASE}/Welspun_One_(_JNPA_SEZ_Site_)/WhatsApp_Image_2025-12-09_at_15.11.36.jpeg`,
+    `${CDN_BASE}/Welspun_One_(_JNPA_SEZ_Site_)/WhatsApp_Image_2025-12-09_at_15.12.18.jpeg`,
+    `${CDN_BASE}/Welspun_One_(_JNPA_SEZ_Site_)/WhatsApp_Image_2025-12-09_at_15.13.35.jpeg`,
+    `${CDN_BASE}/Welspun_One_(_JNPA_SEZ_Site_)/WhatsApp_Image_2025-12-09_at_15.13.37.jpeg`,
+    `${CDN_BASE}/Welspun_One_(_JNPA_SEZ_Site_)/WhatsApp_Image_2025-12-11_at_11.45.32.jpeg`
+  ]
+};
 
-Object.keys(projectImages).forEach((path) => {
-  // path is like /src/assets/projects/Folder Name/Image.jpg
-  const parts = path.split('/');
-  const projectsIndex = parts.indexOf('projects');
-  
-  // Ensure we are looking at a subfolder within projects
-  if (projectsIndex !== -1 && parts.length > projectsIndex + 2) {
-    const folderName = parts[projectsIndex + 1];
-    
-    if (folderName) {
-      if (!projectsMap[folderName]) {
-        projectsMap[folderName] = [];
-      }
-      projectsMap[folderName].push(projectImages[path] as string);
-    }
-  }
-});
 const titleMapping: Record<string, string> = {
   "Ariisto Mulund": "Ariisto, Mulund",
   "Aristo Glory": "Ariisto Glory ",
