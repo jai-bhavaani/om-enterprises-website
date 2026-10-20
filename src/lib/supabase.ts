@@ -1,9 +1,20 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type { Project, HeroSlide, TeamMember, ContactMessage } from '../types/database';
 
-const rawUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+const defaultSupabaseUrl = 'https://cuorugoykxvkldyztiin.supabase.co';
+const defaultAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1b3J1Z295a3h2a2xkeXp0aWluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzNDE0MDUsImV4cCI6MjEwNzkxNzQwNX0.QI36gtYJw5kXWGVbmVreefFr5GV46ofo4_MODi4oHRM';
+
+const rawUrl = (
+  import.meta.env.VITE_SUPABASE_URL || 
+  (import.meta.env as any).SUPABASE_URL || 
+  defaultSupabaseUrl
+).trim();
 const supabaseUrl = rawUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
-const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
+const supabaseAnonKey = (
+  import.meta.env.VITE_SUPABASE_ANON_KEY || 
+  (import.meta.env as any).SUPABASE_ANON_KEY || 
+  defaultAnonKey
+).trim();
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl && 
